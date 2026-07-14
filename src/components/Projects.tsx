@@ -57,10 +57,10 @@ export default function Projects() {
     {
       id: "void-walker",
       title: "VOID WALKER",
-      engine: "Unity Engine (C# ECS)",
+      engine: "Unity Engine",
       genre: "Sci-Fi Space Sandbox Sim",
       description: "A cosmic space flight simulation. Crafted a multi-threaded Newtonian physics solver, a deterministic n-body gravity simulator, and a highly optimized chunked asteroid generation pipeline streaming thousands of fully destructible objects in real-time.",
-      techHighlights: ["Custom C# Job System", "Deterministic Orbital Math", "Octree Volumetric Mesh"],
+      techHighlights: ["Multi-threaded Physics", "Deterministic Orbital Math", "Octree Volumetric Mesh"],
       gradient: "from-blue-600 to-cyber-neon",
       artSVG: (
         <svg className="w-full h-full" viewBox="0 0 400 240" fill="none">
@@ -102,7 +102,7 @@ export default function Projects() {
     {
       id: "kinetic-shift",
       title: "KINETIC SHIFT",
-      engine: "Godot 4 Engine (C++)",
+      engine: "Godot 4 Engine",
       genre: "Anti-Gravity Sci-Fi Racer",
       description: "A blistering-speed racing game. Built custom rigid-body raycast hover physics, bespoke aerodynamic lift computations, and tailored HLSL vertex displacement shaders producing speed motion-warps and sonic boom screen distortions dynamically.",
       techHighlights: ["Raycast Hover Solver", "Custom HLSL Shaders", "Bespoke Aerodynamics"],

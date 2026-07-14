@@ -198,34 +198,6 @@ export default function Skills() {
       ),
     },
     {
-      name: "C# Language",
-      category: "Language",
-      percent: 94,
-      level: "Expert",
-      color: "from-cyber-neon to-cyber-magenta",
-      icon: (
-        <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-          {/* C# Shield */}
-          <path d="M12 2L4 5V11C4 16.5 12 22 12 22C12 22 20 16.5 20 11V5L12 2Z" stroke="currentColor" />
-          <text x="7" y="15" fill="currentColor" fontFamily="monospace" fontSize="10" fontWeight="bold">C#</text>
-        </svg>
-      ),
-    },
-    {
-      name: "C++ Programming",
-      category: "Language",
-      percent: 90,
-      level: "Expert",
-      color: "from-blue-600 to-cyber-neon",
-      icon: (
-        <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-          {/* C++ Shield */}
-          <path d="M12 2L4 5V11C4 16.5 12 22 12 22C12 22 20 16.5 20 11V5L12 2Z" stroke="currentColor" />
-          <text x="6" y="14" fill="currentColor" fontFamily="monospace" fontSize="8" fontWeight="bold">C++</text>
-        </svg>
-      ),
-    },
-    {
       name: "C Programming",
       category: "Language",
       percent: 88,
@@ -306,13 +278,13 @@ export default function Skills() {
                 Engine & Language Core
               </h3>
               <p className="text-sm text-gray-400 leading-relaxed">
-                A professional game developer portfolio is measured by real hardware orchestration capability. My pipeline proficiency spans multi-threaded engine optimization, spatial partitioning, C++ memory arenas, and graphics buffers.
+                A professional developer portfolio is measured by real systems orchestration capability. My pipeline proficiency spans multi-threaded execution, spatial partitioning, C & Java memory models, and graphics buffers.
               </p>
             </div>
 
             <div className="flex flex-col gap-2.5 border-t border-[rgba(255,255,255,0.08)] pt-6">
               <div className="flex items-center gap-2 text-xs text-gray-300">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" /> C++ Memory Arenas & GC optimization
+                <CheckCircle2 className="w-4 h-4 text-emerald-400" /> C & Java Memory & GC optimization
               </div>
               <div className="flex items-center gap-2 text-xs text-gray-300">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400" /> HLSL & GLSL Shader Authoring

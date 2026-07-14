@@ -68,7 +68,7 @@ export default function Navbar({ activeSection }: NavbarProps) {
           </a>
 
           {/* Desktop Nav Items */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-1 bg-[rgba(255,255,255,0.02)] p-1 rounded-full border border-white/5 backdrop-blur-md">
             {navItems.map((item) => {
               const isActive = activeSection === item.href.replace("#", "");
               return (
@@ -76,19 +76,15 @@ export default function Navbar({ activeSection }: NavbarProps) {
                   key={item.label}
                   href={item.href}
                   onClick={(e) => handleScrollTo(e, item.href)}
-                  className={`group relative font-sans text-sm font-medium tracking-wide uppercase transition-all duration-300 py-1 ${
+                  className={`relative px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-all duration-300 flex items-center justify-center border ${
                     isActive
-                      ? "bg-gradient-to-r from-[#b975ff] via-cyber-magenta to-[#f0abfc] bg-clip-text text-transparent font-bold"
-                      : "text-gray-400 hover:bg-gradient-to-r hover:from-[#b975ff] hover:via-cyber-magenta hover:to-[#f0abfc] hover:bg-clip-text hover:text-transparent"
+                      ? "bg-[rgba(255,255,255,0.08)] border-[rgba(224,75,255,0.4)] text-white shadow-[0_0_15px_rgba(224,75,255,0.2),inset_0_1px_0_0_rgba(255,255,255,0.1)]"
+                      : "border-transparent text-gray-400 hover:text-white hover:bg-[rgba(255,255,255,0.03)] hover:border-white/5"
                   }`}
                 >
-                  {item.label}
-                  {/* Underline Indicator */}
-                  <span
-                    className={`absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-cyber-neon to-cyber-magenta transition-all duration-300 ${
-                      isActive ? "w-full" : "w-0 group-hover:w-full"
-                    }`}
-                  />
+                  <span className={isActive ? "bg-gradient-to-r from-[#c084fc] to-[#f472b6] bg-clip-text text-transparent font-bold" : ""}>
+                    {item.label}
+                  </span>
                 </a>
               );
             })}
@@ -118,7 +114,7 @@ export default function Navbar({ activeSection }: NavbarProps) {
 
         {/* Mobile Nav Menu */}
         {isOpen && (
-          <div className="md:hidden mt-4 pt-4 border-t border-[rgba(138,63,252,0.15)] flex flex-col gap-4 animate-fade-in">
+          <div className="md:hidden mt-4 pt-4 border-t border-[rgba(138,63,252,0.15)] flex flex-col gap-2 animate-fade-in">
             {navItems.map((item) => {
               const isActive = activeSection === item.href.replace("#", "");
               return (
@@ -126,13 +122,15 @@ export default function Navbar({ activeSection }: NavbarProps) {
                   key={item.label}
                   href={item.href}
                   onClick={(e) => handleScrollTo(e, item.href)}
-                  className={`text-base font-medium tracking-wide uppercase py-1 transition-all duration-300 block ${
+                  className={`text-sm font-semibold tracking-wider uppercase px-4 py-2.5 rounded-xl transition-all duration-300 block border ${
                     isActive 
-                      ? "bg-gradient-to-r from-[#b975ff] via-cyber-magenta to-[#f0abfc] bg-clip-text text-transparent font-bold pl-2 border-l-2 border-cyber-magenta" 
-                      : "text-gray-400 hover:bg-gradient-to-r hover:from-[#b975ff] hover:via-cyber-magenta hover:to-[#f0abfc] hover:bg-clip-text hover:text-transparent"
+                      ? "bg-[rgba(255,255,255,0.08)] border-[rgba(224,75,255,0.4)] text-white shadow-[0_0_15px_rgba(224,75,255,0.15),inset_0_1px_0_0_rgba(255,255,255,0.1)]" 
+                      : "text-gray-400 border-transparent hover:text-white hover:bg-[rgba(255,255,255,0.03)] hover:border-white/5"
                   }`}
                 >
-                  {item.label}
+                  <span className={isActive ? "bg-gradient-to-r from-[#c084fc] to-[#f472b6] bg-clip-text text-transparent font-bold" : ""}>
+                    {item.label}
+                  </span>
                 </a>
               );
             })}

@@ -17,8 +17,8 @@ export default function About() {
     {
       id: "experience",
       title: "Experience",
-      value: "6+ Yrs",
-      sub: "Gameplay Systems",
+      value: "2+ Yrs",
+      sub: "Software & Games",
       color: "rgba(224, 75, 255, 0.4)",
       border: "border-cyber-magenta/30",
       icon: <Award className="w-5 h-5 text-cyber-magenta" />,
@@ -30,7 +30,28 @@ export default function About() {
       sub: "Engine Optimized",
       color: "rgba(255, 255, 255, 0.3)",
       border: "border-white/20",
-      icon: <Flame className="w-5 h-5 text-white" />,
+      icon: (
+        <motion.div
+          animate={{
+            scale: [1, 1.12, 0.96, 1.08, 1],
+            y: [0, -1, 0.5, -0.5, 0],
+            filter: [
+              "drop-shadow(0 0 2px rgba(251,146,60,0.3))",
+              "drop-shadow(0 0 8px rgba(251,146,60,0.7))",
+              "drop-shadow(0 0 4px rgba(251,146,60,0.4))",
+              "drop-shadow(0 0 9px rgba(251,146,60,0.8))",
+              "drop-shadow(0 0 2px rgba(251,146,60,0.3))"
+            ]
+          }}
+          transition={{
+            duration: 2.5,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        >
+          <Flame className="w-5 h-5 text-orange-400 fill-orange-500/20" />
+        </motion.div>
+      ),
     },
   ];
 
@@ -72,15 +93,15 @@ export default function About() {
           </div>
 
           <h3 className="font-orbitron font-bold text-xl text-white tracking-wide">
-            Gameplay Systems Engineer & Worldsmith
+            Software Engineer & Game Developer
           </h3>
 
           <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
-            I am Twasy, a senior gameplay developer specializing in low-level game engine mechanics, fluid controls, AI sensory graphs, and state synchronization. My approach fuses rigorous math with cinematic artistry to design games that feel highly tactile, polished, and responsive.
+            I am <strong className="text-white font-semibold">Adarsh</strong>, a 21-year-old developer from <strong className="text-white font-semibold">Dehradun, India</strong>, currently pursuing Computer Science at <strong className="text-white font-semibold">DIT University</strong>. I specialize in building software with <strong className="text-white font-semibold">C</strong> and <strong className="text-white font-semibold">Java</strong> while exploring the creative side of programming through game development. My work combines logical problem-solving with interactive design, focusing on clean code, performance, and user experience.
           </p>
 
           <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
-            Whether weaving complex animation state-machines in custom C++ setups, developing bespoke physics plugins in Unity, or programming spatial queries inside Unreal Engine, I optimize for the absolute limits of hardware throughput. Let's engineer the next generation of play.
+            From implementing gameplay mechanics and object-oriented systems to developing scalable software applications, I enjoy turning ideas into polished digital experiences. Every project is an opportunity to learn, innovate, and refine my craft. As I continue expanding my knowledge of software engineering and game development, my goal is to create technology that is both functional and memorable.
           </p>
 
           <div className="grid grid-cols-2 gap-4 mt-2 pt-4 border-t border-[rgba(138,63,252,0.15)]">
@@ -300,7 +321,7 @@ export default function About() {
             />
 
             <div className="flex items-center justify-between">
-              <span className="font-orbitron font-bold text-xs text-gray-400 uppercase tracking-widest">
+              <span className="font-sans font-semibold text-[10px] text-gray-400 uppercase tracking-[0.2em]">
                 {stat.title}
               </span>
               <div className="p-2 rounded-lg bg-white/5 border border-white/10 group-hover:border-cyber-neon/30 transition-colors">
@@ -309,7 +330,7 @@ export default function About() {
             </div>
 
             <div className="flex flex-col mt-2">
-              <span className="font-orbitron font-extrabold text-3xl text-white tracking-tight">
+              <span className="font-sans font-light text-4xl tracking-wide bg-gradient-to-br from-white via-white/95 to-white/35 bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(255,255,255,0.15)] group-hover:drop-shadow-[0_2px_15px_rgba(255,255,255,0.3)] transition-all duration-300">
                 {stat.value}
               </span>
               <span className="text-xs text-gray-400 font-sans tracking-wide mt-1">
