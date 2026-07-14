@@ -1,0 +1,6 @@
+{
+  "name": "Twasy Portfolio",
+  "description": "A premium futuristic game developer portfolio website with a cyberpunk aesthetic, inspired by AAA game UI and Apple's Liquid Glass style.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

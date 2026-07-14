@@ -1,0 +1,201 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Syne:wght@700;800&family=JetBrains+Mono:wght@300;400;500;600&family=Mr+De+Haviland&family=Pinyon+Script&family=Playball&family=Alex+Brush&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Sora", ui-sans-serif, system-ui, sans-serif;
+  --font-orbitron: "Syne", sans-serif;
+  --font-glass-script: "Mr De Haviland", cursive;
+  --font-pinyon: "Pinyon Script", cursive;
+  --font-playball: "Playball", cursive;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --color-cyber-black: #08060d;
+  --color-cyber-purple: #130721;
+  --color-cyber-neon: #8a3ffc;
+  --color-cyber-magenta: #e04bff;
+  --color-cyber-dark: #0c0512;
+  --color-cyber-glass: rgba(18, 8, 33, 0.55);
+  --color-cyber-glass-border: rgba(255, 255, 255, 0.16);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #08060d;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(138, 63, 252, 0.4);
+  border-radius: 5px;
+  border: 2px solid #08060d;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(224, 75, 255, 0.6);
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: #08060d;
+  color: #f3f2f5;
+}
+
+body {
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  background-color: #08060d;
+}
+
+/* Thick luxury Frosted Glass panel style */
+.glass-panel {
+  background: rgba(18, 10, 36, 0.55);
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+  border: 1.5px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.75),
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.28),
+    inset 0 -1px 25px 0 rgba(138, 63, 252, 0.12);
+  border-radius: 24px;
+}
+
+.glass-panel-hover:hover {
+  border-color: rgba(224, 75, 255, 0.55);
+  background: rgba(22, 12, 42, 0.65);
+  box-shadow: 
+    0 30px 60px -10px rgba(138, 63, 252, 0.25),
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.38),
+    inset 0 -1px 30px 0 rgba(224, 75, 255, 0.15);
+}
+
+/* Glassmorphic border glow utility with high brightness */
+.border-glow-purple {
+  border-color: rgba(138, 63, 252, 0.5);
+  box-shadow: 
+    0 0 25px rgba(138, 63, 252, 0.3),
+    inset 0 1px 1px rgba(255,255,255,0.25);
+}
+
+.border-glow-magenta {
+  border-color: rgba(224, 75, 255, 0.5);
+  box-shadow: 
+    0 0 25px rgba(224, 75, 255, 0.3),
+    inset 0 1px 1px rgba(255,255,255,0.25);
+}
+
+/* Typography styles */
+.heading-cyber {
+  font-family: var(--font-orbitron);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+.mono-tech {
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+}
+
+/* High-intensity Bright Aura Radial Glows */
+.bright-aura-purple {
+  position: absolute;
+  width: 45%;
+  height: 45%;
+  background: radial-gradient(circle, rgba(138, 63, 252, 0.32) 0%, rgba(138, 63, 252, 0) 70%);
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 9999px;
+}
+
+.bright-aura-magenta {
+  position: absolute;
+  width: 45%;
+  height: 45%;
+  background: radial-gradient(circle, rgba(224, 75, 255, 0.25) 0%, rgba(224, 75, 255, 0) 70%);
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 9999px;
+}
+
+/* Custom reflections / sweeps for Glass elements */
+@keyframes sweep {
+  0% {
+    transform: translateX(-150%) skewX(-25deg);
+  }
+  100% {
+    transform: translateX(150%) skewX(-25deg);
+  }
+}
+
+.animate-sweep {
+  animation: sweep 4.5s infinite ease-in-out;
+}
+
+/* Soft Neon Glowing effects */
+.glow-purple {
+  filter: drop-shadow(0 0 12px rgba(138, 63, 252, 0.65));
+}
+
+.glow-magenta {
+  filter: drop-shadow(0 0 12px rgba(224, 75, 255, 0.65));
+}
+
+.glow-text-purple {
+  text-shadow: 0 0 12px rgba(138, 63, 252, 0.55);
+}
+
+.glow-text-magenta {
+  text-shadow: 0 0 12px rgba(224, 75, 255, 0.55);
+}
+
+/* Grid Perspective container */
+.perspective-container {
+  perspective: 1000px;
+}
+
+@keyframes slow-shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.animate-slow-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.85) 0%,
+    rgba(255, 255, 255, 0.9) 25%,
+    rgba(224, 75, 255, 0.95) 45%,
+    rgba(0, 242, 254, 1) 50%,
+    rgba(224, 75, 255, 0.95) 55%,
+    rgba(255, 255, 255, 0.9) 75%,
+    rgba(255, 255, 255, 0.85) 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: slow-shimmer 8s linear infinite;
+  text-shadow: 0 0 20px rgba(224, 75, 255, 0.15);
+  display: inline-block;
+}
+
+/* Perfect mathematical clipping matching the event horizon sphere of the black hole */
+.clipped-sphere {
+  clip-path: circle(58px at 50% 50%);
+}
+@media (min-width: 640px) {
+  .clipped-sphere {
+    clip-path: circle(78px at 50% 50%);
+  }
+}
+
+
