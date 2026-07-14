@@ -121,7 +121,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="flex items-center gap-2.5 mb-5 px-5 py-1.5 rounded-full border border-[rgba(255,255,255,0.24)] bg-[rgba(18,10,36,0.68)] text-[10px] font-orbitron font-extrabold tracking-[0.32em] text-white uppercase shadow-[0_0_25px_rgba(138,63,252,0.35)] backdrop-blur-xl min-w-[240px] justify-center h-[34px] overflow-hidden"
+          className="flex items-center gap-2.5 mb-5 px-5 py-1.5 rounded-full border border-[rgba(255,255,255,0.24)] bg-[rgba(18,10,36,0.68)] text-[10px] font-mono font-medium tracking-[0.25em] text-white uppercase shadow-[0_0_25px_rgba(138,63,252,0.35)] backdrop-blur-xl min-w-[240px] justify-center h-[34px] overflow-hidden"
         >
           <AnimatePresence mode="wait">
             <motion.div

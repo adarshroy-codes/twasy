@@ -50,10 +50,10 @@ export default function Contact() {
     },
     {
       label: "WhatsApp Comms",
-      value: "+91 98765 43210",
+      value: "+91 82352 57556",
       sub: "Instant secure mobile ping",
       icon: <MessageCircle className="w-5 h-5 text-emerald-400" />,
-      href: "https://wa.me/919876543210",
+      href: "https://wa.me/918235257556",
     },
     {
       label: "Instagram Feed",

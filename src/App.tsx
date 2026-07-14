@@ -123,7 +123,7 @@ export default function App() {
                 <div className="flex flex-col items-center md:items-end gap-1 text-center md:text-right text-gray-500 font-sans text-xs">
                   <p>© {new Date().getFullYear()} TWASY. All Rights Reserved.</p>
                   <p className="text-[10px] text-gray-600 font-mono uppercase tracking-wide">
-                    Designed for Apple Glass & Cyberpunk HUDs
+                    Designed for Professionals & Tech Heads
                   </p>
                 </div>
               </div>
