@@ -154,7 +154,7 @@ export default function About() {
               {/* The "Profile Image" (Local image with high-fidelity vector illustration fallback) */}
               {!imageError ? (
                 <img
-                  src="https://collective-blue-zlmyd4uz.edgeone.dev/global__000054e2ea70026d_0000015f_2_000054e2ea70026d_0000000000000001__53b75be840766053_000002114a3018bc_000656907285899f.jpg"
+                  src="https://cdn.phototourl.com/free/2026-07-14-6f3cf220-4198-4eb4-aec1-197309c7c412.jpg"
                   alt="Owner Profile"
                   referrerPolicy="no-referrer"
                   onError={() => setImageError(true)}
