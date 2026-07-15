@@ -1,457 +1,327 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { ArrowDown, Code2, Gamepad2, ArrowRight, Film } from "lucide-react";
-import BlackHole from "./BlackHole";
+import { useState, useEffect, useRef } from "react";
+import { motion } from "motion/react";
+import { ArrowDown } from "lucide-react";
 
-export default function Hero() {
-  const [isHovered, setIsHovered] = useState(false);
-  const [roleIndex, setRoleIndex] = useState(0);
+interface ScrambleTextProps {
+  text: string;
+  isHovered: boolean;
+  className?: string;
+  cursorPosition?: "left" | "right";
+}
 
-  const roles = [
-    { text: "GAME DEV", icon: <Gamepad2 className="w-3.5 h-3.5 text-cyber-neon" /> },
-    { text: "VIDEO EDITOR", icon: <Film className="w-3.5 h-3.5 text-cyber-magenta" /> },
-    { text: "CODER", icon: <Code2 className="w-3.5 h-3.5 text-amber-400" /> }
-  ];
+function ScrambleText({ text, isHovered, className, cursorPosition = "right" }: ScrambleTextProps) {
+  const [displayText, setDisplayText] = useState(text);
+  const [isCursorVisible, setIsCursorVisible] = useState(true);
+  const activeIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
+    if (activeIntervalRef.current) {
+      clearInterval(activeIntervalRef.current);
+    }
+
+    if (isHovered) {
+      const pool = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+{}|:<>?[]\\,./;-=";
+      activeIntervalRef.current = setInterval(() => {
+        const scrambled = Array.from({ length: text.length }, () => 
+          pool[Math.floor(Math.random() * pool.length)]
+        ).join("");
+        setDisplayText(scrambled);
+      }, 60);
+    } else {
+      setDisplayText(text);
+    }
+
+    return () => {
+      if (activeIntervalRef.current) {
+        clearInterval(activeIntervalRef.current);
+      }
+    };
+  }, [isHovered, text]);
+
+  // Terminal-like blinking block cursor loop
+  useEffect(() => {
     const interval = setInterval(() => {
-      setRoleIndex((prev) => (prev + 1) % roles.length);
-    }, 2500);
+      setIsCursorVisible((prev) => !prev);
+    }, 400);
     return () => clearInterval(interval);
   }, []);
 
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+  return (
+    <span className={className}>
+      {isHovered && cursorPosition === "left" && (
+        <span
+          className={`inline-block mr-1 w-1.5 h-3 bg-white/80 align-middle transition-opacity duration-100 ${
+            isCursorVisible ? "opacity-100" : "opacity-10"
+          }`}
+        />
+      )}
+      {displayText}
+      {isHovered && cursorPosition === "right" && (
+        <span
+          className={`inline-block ml-1 w-1.5 h-3 bg-white/80 align-middle transition-opacity duration-100 ${
+            isCursorVisible ? "opacity-100" : "opacity-10"
+          }`}
+        />
+      )}
+    </span>
+  );
+}
+
+export default function Hero({ onNavigate }: { onNavigate: (section: string) => void }) {
+  const [hoveredSide, setHoveredSide] = useState<"about" | "projects" | "center" | null>(null);
+
+  const handleNavigate = (id: string) => {
+    onNavigate(id);
   };
 
-  // Glass crystal particles around the text
-  const particles = [
-    { x: -160, y: -40, size: 6, delay: 0, duration: 4 },
-    { x: 180, y: -60, size: 8, delay: 1, duration: 5 },
-    { x: -120, y: 50, size: 4, delay: 2, duration: 3 },
-    { x: 140, y: 70, size: 5, delay: 1.5, duration: 4.5 },
-    { x: -50, y: -90, size: 5, delay: 0.5, duration: 5.5 },
-    { x: 80, y: -100, size: 7, delay: 2.5, duration: 4 },
-  ];
+  // Generate the overlapping spiral triangles
+  const numTriangles = 80;
+  const size = 195;
+  const rOffset = 158;
+  const triangles = Array.from({ length: numTriangles }, (_, i) => {
+    const theta = (i * 2 * Math.PI) / numTriangles;
+    // Offset centers of triangles to form a beautiful hollow torus
+    const cx = 400 + Math.cos(theta) * rOffset;
+    const cy = 400 + Math.sin(theta) * rOffset;
+    
+    // Rotate each triangle by its positional angle multiplied to create the spiraling spirograph twist
+    const phi = theta * 3.38;
+
+    // Calculate regular triangle coordinates relative to its center (cx, cy)
+    // Vertices at 0, 120, 240 degrees
+    const points = Array.from({ length: 3 }, (_, j) => {
+      const vertexAngle = phi + (j * 2 * Math.PI) / 3;
+      const vx = cx + size * Math.cos(vertexAngle);
+      const vy = cy + size * Math.sin(vertexAngle);
+      return `${vx.toFixed(2)},${vy.toFixed(2)}`;
+    }).join(" ");
+
+    return { id: i, points, opacity: 0.15 + (i % 3) * 0.05 };
+  });
+
+  // Concentric radar-like coordinate dot rings inside the central void
+  const dotRings = [100, 120, 140];
+  const centralDots: { x: number; y: number; key: string }[] = [];
+  dotRings.forEach((r, ringIdx) => {
+    const numDots = ringIdx === 0 ? 12 : ringIdx === 1 ? 24 : 36;
+    for (let i = 0; i < numDots; i++) {
+      const angle = (i * 2 * Math.PI) / numDots;
+      const x = 400 + Math.cos(angle) * r;
+      const y = 400 + Math.sin(angle) * r;
+      centralDots.push({ x, y, key: `dot-${r}-${i}` });
+    }
+  });
 
   return (
     <section
       id="home"
-      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-4 pt-16 z-10"
+      className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-black px-4 pt-16 z-10 select-none"
     >
-      {/* SVG Specular Glass Filter definition with enhanced frosted-glass refraction */}
-      <svg className="absolute w-0 h-0 overflow-hidden" aria-hidden="true">
-        <defs>
-          <filter id="glass-specular" x="-30%" y="-30%" width="160%" height="160%">
-            {/* Generate sharp emboss bevels using alpha gradient */}
-            <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur" />
-            <feSpecularLighting
-              in="blur"
-              surfaceScale="6"
-              specularConstant="2.2"
-              specularExponent="28"
-              lightingColor="#ffffff"
-              result="specular1"
+      {/* 1. Self-contained CSS Styles for ultra-high-performance GPU-accelerated subtle animations */}
+      <style>{`
+        @keyframes slow-mandala-rotate {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        @keyframes slow-orbit {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        @keyframes subtle-breathe {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.02); }
+        }
+        @keyframes sound-bar-pulse {
+          0%, 100% { height: 2px; }
+          50% { height: 10px; }
+        }
+        .animate-mandala {
+          transform-origin: 400px 400px;
+          animation: slow-mandala-rotate 90s linear infinite;
+        }
+        .animate-orbit-container {
+          transform-origin: 400px 400px;
+          animation: slow-orbit 35s linear infinite;
+        }
+        .animate-center-breathe {
+          animation: subtle-breathe 12s ease-in-out infinite;
+        }
+        .bg-grid-dots {
+          background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+          background-size: 24px 24px;
+        }
+      `}</style>
+
+      {/* 2. Delicate Outer Dot Grid Background */}
+      <div className="absolute inset-0 bg-grid-dots pointer-events-none opacity-80" />
+
+      {/* 3. Main Central Geometry Container */}
+      <div className="relative w-full max-w-[85vw] max-h-[85vh] sm:max-w-[70vh] sm:max-h-[70vh] aspect-square flex items-center justify-center animate-center-breathe">
+        
+        {/* Full Interactive SVG Canvas */}
+        <svg
+          viewBox="0 0 800 800"
+          className="w-full h-full text-white"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          {/* Subtle Outer Radius Guides */}
+          <circle cx="400" cy="400" r="380" stroke="rgba(255, 255, 255, 0.03)" strokeWidth="1" fill="none" strokeDasharray="4 8" />
+          <circle cx="400" cy="400" r="320" stroke="rgba(255, 255, 255, 0.02)" strokeWidth="0.75" fill="none" />
+          
+          {/* concentric radar dot coordinate lines inside central void */}
+          {centralDots.map((dot) => (
+            <circle key={dot.key} cx={dot.x} cy={dot.y} r="0.75" fill="white" opacity="0.18" />
+          ))}
+
+          {/* Central Void Inner Guide Ring */}
+          <circle cx="400" cy="400" r="105" stroke="rgba(255, 255, 255, 0.06)" strokeWidth="1" fill="none" />
+
+          {/* Main Spirograph Mandala Spiral */}
+          <g className="animate-mandala">
+            {triangles.map((t) => (
+              <polygon
+                key={t.id}
+                points={t.points}
+                fill="none"
+                stroke="white"
+                strokeWidth="0.65"
+                opacity={hoveredSide === "center" ? t.opacity * 1.5 : t.opacity}
+                style={{ transition: "opacity 0.6s ease" }}
+              />
+            ))}
+          </g>
+
+          {/* Orbiting Celestial Planet Dot */}
+          <g className="animate-orbit-container">
+            {/* Sits right on the outer layer perimeter track */}
+            <circle cx="700" cy="400" r="4.5" fill="white" className="shadow-[0_0_12px_rgba(255,255,255,0.8)]" />
+          </g>
+
+          {/* Central High-Contrast Geometric Vertical Typography Logo ("TWASY") */}
+          <g 
+            className="cursor-pointer"
+            onMouseEnter={() => setHoveredSide("center")}
+            onMouseLeave={() => setHoveredSide(null)}
+            onClick={() => handleNavigate("about")}
+          >
+            {/* Interactive Centered Hover Circle */}
+            <circle cx="400" cy="400" r="90" fill="transparent" />
+
+            {/* Custom SVG Lettering paths centered at (400, 400) */}
+            <g 
+              stroke="white" 
+              strokeWidth="1.5" 
+              strokeLinecap="round" 
+              strokeLinejoin="round" 
+              fill="none"
+              opacity={hoveredSide === "center" ? 1 : 0.8}
+              style={{ transition: "opacity 0.3s ease" }}
             >
-              <feDistantLight azimuth="220" elevation="60" />
-            </feSpecularLighting>
-            <feComposite in="specular1" in2="SourceAlpha" operator="in" result="spec1Out" />
-            
-            {/* Second lighting angle for high-saturation magenta/purple glass dispersion */}
-            <feSpecularLighting
-              in="blur"
-              surfaceScale="5"
-              specularConstant="1.8"
-              specularExponent="45"
-              lightingColor="#E04BFF"
-              result="specular2"
-            >
-              <feDistantLight azimuth="50" elevation="40" />
-            </feSpecularLighting>
-            <feComposite in="specular2" in2="SourceAlpha" operator="in" result="spec2Out" />
+              {/* LETTER 1: T */}
+              <path d="M 388 293 h 24" />
+              <path d="M 400 293 v 30" />
 
-            {/* Combine the specular highlights with the original text graphic */}
-            <feMerge>
-              <feMergeNode in="SourceGraphic" />
-              <feMergeNode in="spec1Out" />
-              <feMergeNode in="spec2Out" />
-            </feMerge>
-          </filter>
-        </defs>
-      </svg>
+              {/* LETTER 2: W */}
+              <path d="M 388 339 l 6 30 l 6 -14 l 6 14 l 6 -30" />
 
-      {/* High-Intensity Bright Background Auras (Neon Bloom Aura) */}
-      <div className="absolute top-[35%] left-[50%] -translate-x-[50%] -translate-y-[50%] w-[320px] sm:w-[550px] h-[320px] sm:h-[550px] rounded-full bg-gradient-to-tr from-cyber-neon/45 via-cyber-magenta/35 to-amber-500/10 filter blur-[95px] opacity-75 pointer-events-none mix-blend-screen z-0 animate-pulse" style={{ animationDuration: '8s' }} />
-      <div className="absolute top-[40%] left-[45%] -translate-x-[50%] -translate-y-[50%] w-[250px] sm:w-[400px] h-[250px] sm:h-[400px] rounded-full bg-cyan-500/20 filter blur-[110px] opacity-60 pointer-events-none mix-blend-screen z-0" />
+              {/* LETTER 3: A */}
+              <path d="M 388 415 l 12 -30 l 12 30" />
+              <path d="M 393 403 h 14" />
 
-      {/* Floating Glass Particles */}
-      <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-        {particles.map((p, i) => (
-          <motion.div
-            key={i}
-            className="absolute rounded-sm bg-white/35 border border-white/50 shadow-[0_0_15px_rgba(255,255,255,0.45)]"
-            style={{
-              width: p.size,
-              height: p.size,
-              transform: `translate(${p.x}px, ${p.y}px)`,
-            }}
-            animate={{
-              y: [p.y - 15, p.y + 15, p.y - 15],
-              x: [p.x - 10, p.x + 10, p.x - 10],
-              rotate: [0, 180, 360],
-              opacity: [0.4, 0.9, 0.4],
-            }}
-            transition={{
-              duration: p.duration,
-              repeat: Infinity,
-              delay: p.delay,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
+              {/* LETTER 4: S */}
+              <path d="M 412 431 h -24 v 15 h 24 v 15 h -24" />
+
+              {/* LETTER 5: Y */}
+              <path d="M 388 477 l 12 15 l 12 -15" />
+              <path d="M 400 492 v 15" />
+            </g>
+          </g>
+        </svg>
       </div>
 
-      {/* Hero Content */}
-      <div className="text-center z-10 max-w-4xl flex flex-col items-center">
-        {/* Category Label with pristine ultra-frosted design */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="flex items-center gap-2.5 mb-5 px-5 py-1.5 rounded-full border border-[rgba(255,255,255,0.24)] bg-[rgba(18,10,36,0.68)] text-[10px] font-mono font-medium tracking-[0.25em] text-white uppercase shadow-[0_0_25px_rgba(138,63,252,0.35)] backdrop-blur-xl min-w-[240px] justify-center h-[34px] overflow-hidden"
-        >
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={roleIndex}
-              initial={{ y: 10, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -10, opacity: 0 }}
-              transition={{ duration: 0.25, ease: "easeInOut" }}
-              className="flex items-center gap-2.5"
-            >
-              {roles[roleIndex].icon}
-              <span className="translate-y-[0.5px] whitespace-nowrap">{roles[roleIndex].text}</span>
-            </motion.div>
-          </AnimatePresence>
-        </motion.div>
-
-        {/* 
-          Main Liquid Glass Title: "Adarsh"
-          Crafted with a multi-layered compound layout:
-          - Shadow glow (Neon Bloom)
-          - Base refractive gradient
-          - Edge highlight outline
-          - Shimmer sweep reflection
-        */}
-        <div 
-          className="relative select-none mb-6 cursor-pointer flex items-center justify-center min-h-[220px] sm:min-h-[300px] w-full"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
-          {/* Stunning highly-realistic Gravitational Lensing Black Hole behind name */}
-          <BlackHole isHovered={isHovered} />
-
-          {/* Artistic Flowing Glass Ribbons/Paths (Inspired by Image 1) */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" viewBox="0 0 800 300" preserveAspectRatio="none">
-            <defs>
-              <linearGradient id="ribbon-grad-1" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="rgba(0, 242, 254, 0.12)" />
-                <stop offset="35%" stopColor="rgba(138, 63, 252, 0.35)" />
-                <stop offset="70%" stopColor="rgba(224, 75, 255, 0.35)" />
-                <stop offset="100%" stopColor="rgba(255, 255, 255, 0.08)" />
-              </linearGradient>
-              <linearGradient id="ribbon-grad-2" x1="0%" y1="100%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="rgba(224, 75, 255, 0.08)" />
-                <stop offset="50%" stopColor="rgba(138, 63, 252, 0.3)" />
-                <stop offset="100%" stopColor="rgba(0, 242, 254, 0.25)" />
-              </linearGradient>
-            </defs>
-            {/* Ribbon 1 - Dynamic wavy motion */}
-            <motion.path
-              d="M -50 150 C 200 50, 250 250, 450 150 C 650 50, 600 250, 850 150"
-              fill="none"
-              stroke="url(#ribbon-grad-1)"
-              strokeWidth="5"
-              strokeLinecap="round"
-              animate={{
-                d: [
-                  "M -50 150 C 200 50, 250 250, 450 150 C 650 50, 600 250, 850 150",
-                  "M -50 130 C 180 80, 270 220, 450 170 C 630 120, 620 220, 850 130",
-                  "M -50 150 C 200 50, 250 250, 450 150 C 650 50, 600 250, 850 150"
-                ]
-              }}
-              transition={{
-                duration: 10,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-              style={{
-                filter: "drop-shadow(0 0 12px rgba(138, 63, 252, 0.4))",
-                opacity: isHovered ? 0.9 : 0.65
-              }}
-            />
-            {/* Highlight Edge line of Ribbon 1 for glassy refraction */}
-            <motion.path
-              d="M -50 150 C 200 50, 250 250, 450 150 C 650 50, 600 250, 850 150"
-              fill="none"
-              stroke="rgba(255, 255, 255, 0.6)"
-              strokeWidth="1.2"
-              strokeLinecap="round"
-              animate={{
-                d: [
-                  "M -50 150 C 200 50, 250 250, 450 150 C 650 50, 600 250, 850 150",
-                  "M -50 130 C 180 80, 270 220, 450 170 C 630 120, 620 220, 850 130",
-                  "M -50 150 C 200 50, 250 250, 450 150 C 650 50, 600 250, 850 150"
-                ]
-              }}
-              transition={{
-                duration: 10,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-              style={{
-                opacity: isHovered ? 0.8 : 0.4,
-                mixBlendMode: "overlay"
-              }}
-            />
-
-            {/* Ribbon 2 - Intersecting wave */}
-            <motion.path
-              d="M -50 100 C 150 220, 300 80, 450 200 C 600 320, 650 120, 850 100"
-              fill="none"
-              stroke="url(#ribbon-grad-2)"
-              strokeWidth="4"
-              strokeLinecap="round"
-              animate={{
-                d: [
-                  "M -50 100 C 150 220, 300 80, 450 200 C 600 320, 650 120, 850 100",
-                  "M -50 120 C 170 180, 280 120, 450 180 C 620 240, 630 160, 850 120",
-                  "M -50 100 C 150 220, 300 80, 450 200 C 600 320, 650 120, 850 100"
-                ]
-              }}
-              transition={{
-                duration: 12,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 1
-              }}
-              style={{
-                filter: "drop-shadow(0 0 10px rgba(0, 242, 254, 0.35))",
-                opacity: isHovered ? 0.85 : 0.55
-              }}
-            />
-            {/* Highlight Edge line of Ribbon 2 */}
-            <motion.path
-              d="M -50 100 C 150 220, 300 80, 450 200 C 600 320, 650 120, 850 100"
-              fill="none"
-              stroke="rgba(255, 255, 255, 0.5)"
-              strokeWidth="1"
-              strokeLinecap="round"
-              animate={{
-                d: [
-                  "M -50 100 C 150 220, 300 80, 450 200 C 600 320, 650 120, 850 100",
-                  "M -50 120 C 170 180, 280 120, 450 180 C 620 240, 630 160, 850 120",
-                  "M -50 100 C 150 220, 300 80, 450 200 C 600 320, 650 120, 850 100"
-                ]
-              }}
-              transition={{
-                duration: 12,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 1
-              }}
-              style={{
-                opacity: isHovered ? 0.7 : 0.35,
-                mixBlendMode: "overlay"
-              }}
-            />
+      {/* 4. Left HUD Margin Controller: "About" */}
+      <div 
+        className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 flex items-center gap-3 z-20 group"
+        onMouseEnter={() => setHoveredSide("about")}
+        onMouseLeave={() => setHoveredSide(null)}
+      >
+        <div className="relative flex items-center">
+          <svg 
+            width="60" 
+            height="24" 
+            viewBox="0 0 60 24" 
+            fill="none" 
+            className={`transition-all duration-300 ${
+              hoveredSide === "about" ? "text-white translate-x-1" : "text-white/20"
+            }`}
+          >
+            <path d="M 5 5 L 15 5 L 10 12 L 15 19 L 5 19" stroke="currentColor" strokeWidth="1" strokeLinejoin="round" />
+            <path d="M 15 12 H 55" stroke="currentColor" strokeWidth="1" />
           </svg>
-
-          {/* 1. Neon Bloom / Back Under-glow (Sleek Ambient Aura) */}
-          <motion.h1
-            animate={{
-              scale: isHovered ? 1.12 : 1,
-              opacity: isHovered ? 0.95 : 0.7,
-            }}
-            transition={{ type: "spring", stiffness: 100, damping: 15 }}
-            className="absolute inset-0 font-glass-script text-[20vw] sm:text-[15rem] leading-[1.1] text-cyber-neon filter blur-[42px] pointer-events-none flex items-center justify-center select-none"
-            style={{ textTransform: "none" }}
+          <button
+            onClick={() => handleNavigate("about")}
+            className={`absolute left-20 font-mono text-[10px] tracking-[0.4em] transition-all duration-300 focus:outline-none whitespace-nowrap ${
+              hoveredSide === "about" ? "text-white translate-x-1" : "text-white/40"
+            }`}
           >
-            twasy
-          </motion.h1>
-
-          <motion.h1
-            animate={{
-              scale: isHovered ? 1.12 : 1,
-              opacity: isHovered ? 0.9 : 0.6,
-            }}
-            transition={{ type: "spring", stiffness: 100, damping: 15, delay: 0.03 }}
-            className="absolute inset-0 font-glass-script text-[20vw] sm:text-[15rem] leading-[1.1] text-cyber-magenta filter blur-[26px] pointer-events-none flex items-center justify-center select-none"
-            style={{ textTransform: "none" }}
-          >
-            twasy
-          </motion.h1>
-
-          {/* 2. Base Refractive Layer - Highly Sleek & Transparent Glass (Inspired by Image 1) */}
-          <motion.h1
-            animate={{
-              scale: isHovered ? 1.05 : 1,
-            }}
-            transition={{ type: "spring", stiffness: 100, damping: 15 }}
-            className="font-glass-script text-[20vw] sm:text-[15rem] leading-[1.1] select-none relative z-10 flex items-center justify-center"
-            style={{
-              color: isHovered ? "rgba(255, 255, 255, 0.22)" : "rgba(255, 255, 255, 0.12)",
-              filter: "url(#glass-specular)",
-              WebkitTextStroke: isHovered ? "2px rgba(255, 255, 255, 0.85)" : "1.2px rgba(255, 255, 255, 0.45)",
-              textTransform: "none",
-              transition: "color 0.3s ease, WebkitTextStroke 0.3s ease",
-            }}
-          >
-            twasy
-          </motion.h1>
-
-          {/* 3. Edge-stroked & Specular Cover - Pristine Outer Glass Bezel */}
-          <motion.h1
-            animate={{
-              scale: isHovered ? 1.05 : 1,
-            }}
-            transition={{ type: "spring", stiffness: 100, damping: 15 }}
-            className="absolute inset-0 font-glass-script text-[20vw] sm:text-[15rem] leading-[1.1] pointer-events-none z-20 flex items-center justify-center select-none"
-            style={{
-              color: "transparent",
-              WebkitTextStroke: isHovered ? "3.2px rgba(255, 255, 255, 0.95)" : "2.2px rgba(255, 255, 255, 0.55)",
-              textTransform: "none",
-              textShadow: isHovered 
-                ? "0 0 25px rgba(255, 255, 255, 0.55), 0 0 50px rgba(138, 63, 252, 0.4)" 
-                : "0 0 10px rgba(255, 255, 255, 0.2)",
-              transition: "WebkitTextStroke 0.3s ease, text-shadow 0.3s ease",
-            }}
-          >
-            twasy
-          </motion.h1>
-
-          {/* 4. Clipped Sphere - Highly Refractive Glowing Interior (Inside the Black Hole) */}
-          <motion.h1
-            animate={{
-              scale: isHovered ? 1.05 : 1,
-            }}
-            transition={{ type: "spring", stiffness: 100, damping: 15 }}
-            className="absolute inset-0 font-glass-script text-[20vw] sm:text-[15rem] leading-[1.1] select-none z-30 flex items-center justify-center clipped-sphere pointer-events-none"
-            style={{
-              color: isHovered ? "rgba(0, 242, 254, 0.5)" : "rgba(0, 242, 254, 0.25)",
-              filter: "url(#glass-specular)",
-              WebkitTextStroke: isHovered ? "2px #00f2fe" : "1.2px #00f2fe",
-              textTransform: "none",
-              transition: "color 0.3s ease, WebkitTextStroke 0.3s ease",
-            }}
-          >
-            twasy
-          </motion.h1>
-
-          {/* 5. Clipped Sphere - High-Voltage Outer Edge Glow & Aura (Touching/Intersecting the Circle boundary) */}
-          <motion.h1
-            animate={{
-              scale: isHovered ? 1.05 : 1,
-            }}
-            transition={{ type: "spring", stiffness: 100, damping: 15 }}
-            className="absolute inset-0 font-glass-script text-[20vw] sm:text-[15rem] leading-[1.1] pointer-events-none z-30 flex items-center justify-center select-none clipped-sphere"
-            style={{
-              color: "transparent",
-              WebkitTextStroke: isHovered ? "3.2px #e04bff" : "2.2px #e04bff",
-              textTransform: "none",
-              textShadow: isHovered 
-                ? "0 0 25px rgba(224, 75, 255, 0.95), 0 0 50px rgba(0, 242, 254, 0.9)" 
-                : "0 0 12px rgba(224, 75, 255, 0.6), 0 0 25px rgba(0, 242, 254, 0.55)",
-              transition: "WebkitTextStroke 0.3s ease, text-shadow 0.3s ease",
-            }}
-          >
-            twasy
-          </motion.h1>
-
-          {/* 6. Elegant Glass Sparkle Glow (Fires when hovered!) */}
-          <motion.div
-            animate={{
-              opacity: isHovered ? 1 : 0,
-              scale: isHovered ? 1.15 : 0.8,
-            }}
-            transition={{ duration: 0.4 }}
-            className="absolute inset-x-0 -bottom-4 h-0.5 bg-gradient-to-r from-transparent via-white/70 to-transparent blur-[2px] pointer-events-none"
-          />
+            <ScrambleText text="ABOUT" isHovered={hoveredSide === "about"} />
+          </button>
         </div>
-
-        {/* Tagline */}
-        <motion.p
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-base sm:text-lg text-gray-300 max-w-lg mb-10 tracking-wide flex items-center justify-center gap-2.5"
-        >
-          <Code2 className="w-4 h-4 text-cyber-magenta shrink-0" />
-          <span>
-            coding the mechanics and capturing the{" "}
-            <span className="text-white font-semibold">
-              narratives.
-            </span>
-          </span>
-        </motion.p>
-
-        {/* Call to Actions (Interactive Glass Buttons) */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="flex flex-col sm:flex-row items-center gap-5 w-full sm:w-auto"
-        >
-          {/* Primary View Projects Button - Thicker luxury glass finish */}
-          <button
-            onClick={() => scrollToSection("projects")}
-            className="group relative w-full sm:w-auto px-9 py-4.5 rounded-xl font-orbitron font-extrabold text-[10px] tracking-[0.25em] uppercase text-white overflow-hidden transition-all duration-300 border border-[rgba(255,255,255,0.32)] bg-[rgba(22,12,42,0.65)] shadow-[0_15px_35px_rgba(138,63,252,0.25)] hover:shadow-[0_20px_45px_rgba(224,75,255,0.45)] hover:border-[rgba(224,75,255,0.85)] active:scale-95 backdrop-blur-xl"
-          >
-            {/* Shimmer backdrop */}
-            <div className="absolute inset-0 bg-gradient-to-r from-cyber-neon/30 via-cyber-magenta/30 to-cyber-neon/30 -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
-            
-            {/* Gloss Reflection Sweeper */}
-            <div className="absolute inset-y-0 w-10 bg-white/25 skew-x-12 -left-16 group-hover:left-[110%] transition-all duration-700 ease-out" />
-
-            <span className="relative z-10 flex items-center justify-center gap-2">
-              View Projects
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </span>
-          </button>
-
-          {/* Secondary Get In Touch Button */}
-          <button
-            onClick={() => scrollToSection("contact")}
-            className="group relative w-full sm:w-auto px-9 py-4.5 rounded-xl font-orbitron font-extrabold text-[10px] tracking-[0.25em] uppercase text-gray-300 overflow-hidden transition-all duration-300 border border-[rgba(255,255,255,0.18)] bg-white/5 hover:text-white hover:border-[rgba(138,63,252,0.55)] hover:bg-[rgba(138,63,252,0.12)] hover:shadow-[0_15px_35px_rgba(138,63,252,0.3)] backdrop-blur-xl active:scale-95"
-          >
-            {/* Diagonal Sweeper */}
-            <div className="absolute inset-y-0 w-10 bg-white/15 skew-x-12 -left-16 group-hover:left-[110%] transition-all duration-700 ease-out" />
-            
-            <span className="relative z-10">Get In Touch</span>
-          </button>
-        </motion.div>
       </div>
 
-      {/* Scroll Down Indicator */}
+      {/* 5. Right HUD Margin Controller: "Portfolio" */}
+      <div 
+        className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 flex items-center justify-end gap-3 z-20 group"
+        onMouseEnter={() => setHoveredSide("projects")}
+        onMouseLeave={() => setHoveredSide(null)}
+      >
+        <div className="relative flex items-center justify-end">
+          <button
+            onClick={() => handleNavigate("projects")}
+            className={`absolute right-20 font-mono text-[10px] tracking-[0.4em] transition-all duration-300 focus:outline-none whitespace-nowrap ${
+              hoveredSide === "projects" ? "text-white -translate-x-1" : "text-white/40"
+            }`}
+          >
+            <ScrambleText text="PORTFOLIO" isHovered={hoveredSide === "projects"} cursorPosition="left" />
+          </button>
+          <svg 
+            width="60" 
+            height="24" 
+            viewBox="0 0 60 24" 
+            fill="none" 
+            className={`transition-all duration-300 ${
+              hoveredSide === "projects" ? "text-white -translate-x-1" : "text-white/20"
+            }`}
+          >
+            <path d="M 55 5 L 45 5 L 50 12 L 45 19 L 55 19" stroke="currentColor" strokeWidth="1" strokeLinejoin="round" />
+            <path d="M 45 12 H 5" stroke="currentColor" strokeWidth="1" />
+          </svg>
+        </div>
+      </div>
+
+      {/* 6. Centered Audio Player/Ticker HUD Footer */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-3.5 z-20 select-none">
+        <span className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.6)]" />
+        <span className="font-mono text-[9px] sm:text-[10px] tracking-[0.35em] text-white/40 uppercase whitespace-nowrap flex items-center gap-2">
+          <span>&gt; Peggy Gou - Han Jan</span>
+          {/* Real Animated Equalizer Wavebars */}
+          <span className="flex items-end gap-[2px] h-2.5 w-4 pb-[1px]">
+            <span className="w-[1.2px] bg-white/45 rounded-full" style={{ animation: "sound-bar-pulse 1.2s ease-in-out infinite" }} />
+            <span className="w-[1.2px] bg-white/45 rounded-full" style={{ animation: "sound-bar-pulse 0.8s ease-in-out infinite 0.25s" }} />
+            <span className="w-[1.2px] bg-white/45 rounded-full" style={{ animation: "sound-bar-pulse 1.5s ease-in-out infinite 0.5s" }} />
+          </span>
+        </span>
+      </div>
+
+      {/* 7. Subtle Floating Scroll Guide Down Indicator */}
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.6 }}
-        transition={{ delay: 1.2, duration: 1 }}
-        className="absolute bottom-8 cursor-pointer flex flex-col items-center gap-1 group"
-        onClick={() => scrollToSection("about")}
+        animate={{ opacity: 0.35 }}
+        transition={{ delay: 1.5, duration: 1 }}
+        className="absolute bottom-20 cursor-pointer flex flex-col items-center gap-1.5 group sm:hidden"
+        onClick={() => handleNavigate("about")}
       >
-        <span className="font-orbitron text-[10px] tracking-[0.3em] text-gray-500 group-hover:text-cyber-magenta transition-colors">
-          SCROLL_DOWN
-        </span>
-        <motion.div
-          animate={{ y: [0, 6, 0] }}
-          transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-        >
-          <ArrowDown className="w-4 h-4 text-cyber-neon group-hover:text-cyber-magenta transition-colors shadow-glow-purple" />
-        </motion.div>
+        <ArrowDown className="w-3.5 h-3.5 text-white/50 group-hover:text-white transition-colors" />
       </motion.div>
     </section>
   );

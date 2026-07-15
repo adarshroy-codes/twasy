@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Mail, MessageSquare, MapPin, Send, Terminal, CheckCircle, Instagram, MessageCircle } from "lucide-react";
+import GlitchText from "./GlitchText";
+import TiltWrapper from "./TiltWrapper";
 
 export default function Contact() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
@@ -120,7 +122,7 @@ export default function Contact() {
           </span>
         </div>
         <h2 className="heading-cyber text-3xl sm:text-4xl text-white font-black tracking-wider">
-          SECURE <span className="bg-gradient-to-r from-cyber-magenta to-cyber-neon bg-clip-text text-transparent">UPLINK</span>
+          <GlitchText>SECURE</GlitchText> <span className="bg-gradient-to-r from-cyber-magenta to-cyber-neon bg-clip-text text-transparent"><GlitchText delay={150}>UPLINK</GlitchText></span>
         </h2>
       </motion.div>
 
@@ -128,79 +130,81 @@ export default function Contact() {
         {/* Left Column: Floating Glass Envelope Illustration & Contact Cards */}
         <div className="lg:col-span-5 flex flex-col gap-6 justify-between">
           {/* Custom Floating Glass Envelope Graphic Panel */}
-          <motion.div
-            variants={itemVariants}
-            className="rounded-2xl glass-panel p-6 flex flex-col items-center justify-center relative overflow-hidden h-60 sm:h-72"
-          >
-            {/* Background vector starburst glow */}
-            <div className="absolute w-36 h-36 rounded-full bg-cyber-neon/15 blur-[25px] pointer-events-none animate-pulse-slow" />
-
-            {/* Floating Glass Envelope SVG */}
+          <TiltWrapper className="w-full" maxTilt={6}>
             <motion.div
-              animate={{
-                y: [-8, 8, -8],
-                rotate: [-2, 2, -2],
-              }}
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="relative w-40 h-40 filter drop-shadow-[0_10px_20px_rgba(138,63,252,0.25)]"
+              variants={itemVariants}
+              className="rounded-2xl glass-panel p-6 flex flex-col items-center justify-center relative overflow-hidden h-60 sm:h-72 w-full"
             >
-              <svg viewBox="0 0 100 100" className="w-full h-full" fill="none">
-                {/* Envelope Back Plate (Translucent Purple) */}
-                <rect x="15" y="25" width="70" height="50" rx="6" fill="rgba(20, 8, 31, 0.45)" stroke="rgba(138, 63, 252, 0.3)" strokeWidth="1.5" />
-                
-                {/* Emerging glowing data card / document */}
-                <motion.rect
-                  x="22"
-                  y="18"
-                  width="56"
-                  height="34"
-                  rx="3"
-                  fill="rgba(224, 75, 255, 0.15)"
-                  stroke="rgba(224, 75, 255, 0.6)"
-                  strokeWidth="1.2"
-                  animate={{
-                    y: [18, 12, 18],
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                />
-                
-                {/* Document details lines */}
-                <line x1="28" y1="23" x2="52" y2="23" stroke="rgba(255,255,255,0.4)" strokeWidth="1" />
-                <line x1="28" y1="28" x2="68" y2="28" stroke="rgba(255,255,255,0.3)" strokeWidth="1" />
-                <line x1="28" y1="33" x2="44" y2="33" stroke="rgba(255,255,255,0.2)" strokeWidth="1" />
+              {/* Background vector starburst glow */}
+              <div className="absolute w-36 h-36 rounded-full bg-cyber-neon/15 blur-[25px] pointer-events-none animate-pulse-slow" />
 
-                {/* Envelope Front Fold (Liquid Glass triangular flap) */}
-                <path
-                  d="M 15,25 L 50,55 L 85,25"
-                  stroke="rgba(255, 255, 255, 0.45)"
-                  strokeWidth="1.5"
-                  fill="rgba(255, 255, 255, 0.05)"
-                  style={{
-                    backdropFilter: "blur(6px)",
-                  }}
-                />
-                
-                {/* Lower overlapping folds */}
-                <path d="M 15,75 L 42,50" stroke="rgba(138, 63, 252, 0.3)" strokeWidth="1" />
-                <path d="M 85,75 L 58,50" stroke="rgba(138, 63, 252, 0.3)" strokeWidth="1" />
-                
-                {/* Neon core power point on clasp */}
-                <circle cx="50" cy="55" r="3" fill="#E04BFF" className="animate-pulse" />
-                <circle cx="50" cy="55" r="6" stroke="#8A3FFC" strokeWidth="0.5" />
-              </svg>
+              {/* Floating Glass Envelope SVG */}
+              <motion.div
+                animate={{
+                  y: [-8, 8, -8],
+                  rotate: [-2, 2, -2],
+                }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="relative w-40 h-40 filter drop-shadow-[0_10px_20px_rgba(255,255,255,0.15)]"
+              >
+                <svg viewBox="0 0 100 100" className="w-full h-full" fill="none">
+                  {/* Envelope Back Plate (Translucent Gray) */}
+                  <rect x="15" y="25" width="70" height="50" rx="6" fill="rgba(15, 15, 18, 0.45)" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="1.5" />
+                  
+                  {/* Emerging glowing data card / document */}
+                  <motion.rect
+                    x="22"
+                    y="18"
+                    width="56"
+                    height="34"
+                    rx="3"
+                    fill="rgba(255, 255, 255, 0.1)"
+                    stroke="rgba(255, 255, 255, 0.5)"
+                    strokeWidth="1.2"
+                    animate={{
+                      y: [18, 12, 18],
+                    }}
+                    transition={{
+                      duration: 4,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  />
+                  
+                  {/* Document details lines */}
+                  <line x1="28" y1="23" x2="52" y2="23" stroke="rgba(255,255,255,0.4)" strokeWidth="1" />
+                  <line x1="28" y1="28" x2="68" y2="28" stroke="rgba(255,255,255,0.3)" strokeWidth="1" />
+                  <line x1="28" y1="33" x2="44" y2="33" stroke="rgba(255,255,255,0.2)" strokeWidth="1" />
+
+                  {/* Envelope Front Fold (Liquid Glass triangular flap) */}
+                  <path
+                    d="M 15,25 L 50,55 L 85,25"
+                    stroke="rgba(255, 255, 255, 0.45)"
+                    strokeWidth="1.5"
+                    fill="rgba(255, 255, 255, 0.05)"
+                    style={{
+                      backdropFilter: "blur(6px)",
+                    }}
+                  />
+                  
+                  {/* Lower overlapping folds */}
+                  <path d="M 15,75 L 42,50" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="1" />
+                  <path d="M 85,75 L 58,50" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="1" />
+                  
+                  {/* Neon core power point on clasp */}
+                  <circle cx="50" cy="55" r="3" fill="#ffffff" className="animate-pulse" />
+                  <circle cx="50" cy="55" r="6" stroke="#d4d4d8" strokeWidth="0.5" />
+                </svg>
+              </motion.div>
+              <span className="font-orbitron font-bold text-xs text-gray-400 tracking-widest mt-2 uppercase">
+                TRANSMITTER_ONLINE
+              </span>
             </motion.div>
-            <span className="font-orbitron font-bold text-xs text-gray-400 tracking-widest mt-2 uppercase">
-              TRANSMITTER_ONLINE
-            </span>
-          </motion.div>
+          </TiltWrapper>
 
           {/* Contact Cards Stack */}
           <div className="flex flex-col gap-4">
@@ -213,14 +217,14 @@ export default function Contact() {
                 variants={itemVariants}
                 className="glass-panel glass-panel-hover p-4 flex items-center gap-4 transition-all duration-300 relative group overflow-hidden"
               >
-                <div className="p-3 rounded-xl bg-white/5 border border-white/10 group-hover:border-cyber-magenta/40 transition-colors">
+                <div className="p-3 rounded-xl bg-white/5 border border-white/10 group-hover:border-white/40 transition-colors">
                   {card.icon}
                 </div>
                 <div className="flex flex-col">
                   <span className="font-mono text-[9px] text-gray-500 uppercase tracking-widest">
                     {card.label}
                   </span>
-                  <span className="font-sans font-bold text-sm text-white mt-0.5 group-hover:text-cyber-magenta transition-colors">
+                  <span className="font-sans font-bold text-sm text-white mt-0.5 group-hover:text-white transition-colors">
                     {card.value}
                   </span>
                   <span className="font-mono text-[10px] text-gray-400 mt-0.5">
@@ -233,17 +237,18 @@ export default function Contact() {
         </div>
 
         {/* Right Column: Large Liquid Glass Contact Panel */}
-        <motion.div
-          variants={itemVariants}
-          className="lg:col-span-7 rounded-2xl glass-panel p-8 flex flex-col justify-between relative overflow-hidden"
-        >
+        <TiltWrapper className="lg:col-span-7" maxTilt={6}>
+          <motion.div
+            variants={itemVariants}
+            className="rounded-2xl glass-panel p-8 flex flex-col justify-between relative overflow-hidden h-full w-full"
+          >
           {/* Subtle tech background line decoration */}
-          <div className="absolute right-0 bottom-0 w-44 h-44 border-r border-b border-cyber-neon/10 pointer-events-none" />
+          <div className="absolute right-0 bottom-0 w-44 h-44 border-r border-b border-white/10 pointer-events-none" />
 
           {status !== "success" ? (
             <form onSubmit={handleSubmit} className="flex flex-col gap-6">
               <div className="flex flex-col gap-2">
-                <span className="font-mono text-[10px] text-cyber-neon uppercase tracking-widest">
+                <span className="font-mono text-[10px] text-white/60 uppercase tracking-widest">
                   // ENTER_TRANSMITTER_DATA
                 </span>
                 <h3 className="font-orbitron font-bold text-lg text-white">
@@ -264,7 +269,7 @@ export default function Contact() {
                   required
                   placeholder="e.g. Commander Shepard"
                   disabled={status === "transmitting"}
-                  className="w-full px-4 py-3 rounded-lg bg-cyber-black/75 border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:border-cyber-magenta focus:shadow-[0_0_12px_rgba(224,75,255,0.2)] font-sans text-sm transition-all duration-300 disabled:opacity-50"
+                  className="w-full px-4 py-3 rounded-lg bg-cyber-black/75 border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:border-white focus:shadow-[0_0_12px_rgba(255,255,255,0.15)] font-sans text-sm transition-all duration-300 disabled:opacity-50"
                 />
               </div>
 
@@ -281,7 +286,7 @@ export default function Contact() {
                   required
                   placeholder="e.g. pilot@alliance.net"
                   disabled={status === "transmitting"}
-                  className="w-full px-4 py-3 rounded-lg bg-cyber-black/75 border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:border-cyber-magenta focus:shadow-[0_0_12px_rgba(224,75,255,0.2)] font-sans text-sm transition-all duration-300 disabled:opacity-50"
+                  className="w-full px-4 py-3 rounded-lg bg-cyber-black/75 border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:border-white focus:shadow-[0_0_12px_rgba(255,255,255,0.15)] font-sans text-sm transition-all duration-300 disabled:opacity-50"
                 />
               </div>
 
@@ -298,7 +303,7 @@ export default function Contact() {
                   rows={4}
                   placeholder="Type secure system request details here..."
                   disabled={status === "transmitting"}
-                  className="w-full px-4 py-3 rounded-lg bg-cyber-black/75 border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:border-cyber-magenta focus:shadow-[0_0_12px_rgba(224,75,255,0.2)] font-sans text-sm transition-all duration-300 disabled:opacity-50 resize-none"
+                  className="w-full px-4 py-3 rounded-lg bg-cyber-black/75 border border-white/10 text-white placeholder-gray-600 focus:outline-none focus:border-white focus:shadow-[0_0_12px_rgba(255,255,255,0.15)] font-sans text-sm transition-all duration-300 disabled:opacity-50 resize-none"
                 />
               </div>
 
@@ -309,9 +314,9 @@ export default function Contact() {
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="p-4 rounded-lg bg-black border border-cyber-neon/30 font-mono text-[10px] text-cyber-neon flex flex-col gap-1 shadow-inner max-h-40 overflow-y-auto"
+                    className="p-4 rounded-lg bg-black border border-white/30 font-mono text-[10px] text-white flex flex-col gap-1 shadow-inner max-h-40 overflow-y-auto"
                   >
-                    <div className="flex items-center gap-1.5 font-bold mb-1 border-b border-cyber-neon/10 pb-1">
+                    <div className="flex items-center gap-1.5 font-bold mb-1 border-b border-white/10 pb-1">
                       <Terminal className="w-3.5 h-3.5 animate-pulse" />
                       CO_PROC_LOGS: ACTIVE
                     </div>
@@ -328,7 +333,7 @@ export default function Contact() {
               <button
                 type="submit"
                 disabled={status === "transmitting"}
-                className="w-full group relative py-3.5 rounded-lg font-orbitron font-bold text-xs tracking-[0.2em] uppercase text-white overflow-hidden transition-all duration-300 border border-cyber-magenta bg-cyber-magenta/10 hover:bg-cyber-magenta hover:shadow-[0_0_20px_rgba(224,75,255,0.5)] active:scale-95 disabled:opacity-50"
+                className="w-full group relative py-3.5 rounded-lg font-orbitron font-bold text-xs tracking-[0.2em] uppercase text-white overflow-hidden transition-all duration-300 border border-white/20 bg-white/5 hover:bg-white/10 hover:shadow-[0_0_20px_rgba(255,255,255,0.2)] active:scale-95 disabled:opacity-50"
               >
                 <span className="relative z-10 flex items-center justify-center gap-2">
                   <Send className="w-4 h-4" />
@@ -343,7 +348,7 @@ export default function Contact() {
               animate={{ opacity: 1, scale: 1 }}
               className="flex flex-col items-center justify-center text-center py-10 gap-6 h-full"
             >
-              <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500 flex items-center justify-center text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+              <div className="w-16 h-16 rounded-full bg-white/10 border border-white flex items-center justify-center text-white shadow-[0_0_20px_rgba(255,255,255,0.3)]">
                 <CheckCircle className="w-8 h-8" />
               </div>
 
@@ -366,7 +371,8 @@ export default function Contact() {
             </motion.div>
           )}
         </motion.div>
-      </div>
+      </TiltWrapper>
+    </div>
     </motion.section>
   );
 }

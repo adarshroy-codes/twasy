@@ -99,42 +99,42 @@ export default function GlassOrb({
         <defs>
           {/* Ambient Outer Halo Glow */}
           <radialGradient id={`chroma-glow-${size}`} cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="rgba(138, 63, 252, 0.55)" />
-            <stop offset="50%" stopColor="rgba(0, 242, 254, 0.3)" />
-            <stop offset="75%" stopColor="rgba(224, 75, 255, 0.18)" />
+            <stop offset="0%" stopColor="rgba(255, 255, 255, 0.55)" />
+            <stop offset="50%" stopColor="rgba(212, 212, 216, 0.3)" />
+            <stop offset="75%" stopColor="rgba(161, 161, 170, 0.18)" />
             <stop offset="100%" stopColor="rgba(0, 0, 0, 0)" />
           </radialGradient>
 
           {/* Accent Orange/Red Bottom Rim */}
           <linearGradient id={`orange-rim-${size}`} x1="0%" y1="100%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="rgba(255, 60, 40, 1)" />
-            <stop offset="45%" stopColor="rgba(224, 75, 255, 0.45)" />
+            <stop offset="0%" stopColor="rgba(228, 228, 231, 0.85)" />
+            <stop offset="45%" stopColor="rgba(161, 161, 170, 0.45)" />
             <stop offset="100%" stopColor="rgba(0, 0, 0, 0)" />
           </linearGradient>
 
           {/* Majestic Crescent Chromatic Arc Gradient */}
           <radialGradient id={`cyan-rim-grad-${size}`} cx="38%" cy="78%" r="62%">
             <stop offset="0%" stopColor="rgba(255, 255, 255, 1)" />
-            <stop offset="20%" stopColor="rgba(0, 242, 254, 0.95)" />
-            <stop offset="45%" stopColor="rgba(138, 63, 252, 0.75)" />
-            <stop offset="75%" stopColor="rgba(224, 75, 255, 0.25)" />
+            <stop offset="20%" stopColor="rgba(244, 244, 245, 0.95)" />
+            <stop offset="45%" stopColor="rgba(161, 161, 170, 0.75)" />
+            <stop offset="75%" stopColor="rgba(113, 113, 122, 0.25)" />
             <stop offset="100%" stopColor="rgba(0, 0, 0, 0)" />
           </radialGradient>
 
           {/* Diagonal Refractive Filament Gradient */}
           <linearGradient id={`inner-filament-${size}`} x1="10%" y1="75%" x2="90%" y2="25%">
-            <stop offset="0%" stopColor="rgba(224, 75, 255, 0)" />
-            <stop offset="30%" stopColor="rgba(224, 75, 255, 0.9)" />
-            <stop offset="55%" stopColor="rgba(202, 142, 255, 0.75)" />
-            <stop offset="85%" stopColor="rgba(0, 242, 254, 0.4)" />
-            <stop offset="100%" stopColor="rgba(138, 63, 252, 0)" />
+            <stop offset="0%" stopColor="rgba(255, 255, 255, 0)" />
+            <stop offset="30%" stopColor="rgba(255, 255, 255, 0.9)" />
+            <stop offset="55%" stopColor="rgba(228, 228, 231, 0.75)" />
+            <stop offset="85%" stopColor="rgba(161, 161, 170, 0.4)" />
+            <stop offset="100%" stopColor="rgba(255, 255, 255, 0)" />
           </linearGradient>
 
           {/* Volumetric Dark Core Density Mask */}
           <radialGradient id={`dark-core-${size}`} cx="45%" cy="45%" r="50%">
-            <stop offset="0%" stopColor="rgba(2, 1, 5, 0.15)" />
-            <stop offset="70%" stopColor="rgba(6, 4, 12, 0.12)" />
-            <stop offset="88%" stopColor="rgba(138, 63, 252, 0.45)" />
+            <stop offset="0%" stopColor="rgba(10, 10, 12, 0.15)" />
+            <stop offset="70%" stopColor="rgba(15, 15, 18, 0.12)" />
+            <stop offset="88%" stopColor="rgba(228, 228, 231, 0.45)" />
             <stop offset="100%" stopColor="rgba(255, 255, 255, 0)" />
           </radialGradient>
 
@@ -220,10 +220,10 @@ export default function GlassOrb({
             opacity="0.9"
           />
 
-          {/* Bottom Orange fire highlight rim */}
+           {/* Bottom Silver reflective highlight rim */}
           <path
             d="M 276 414 C 342 404, 396 348, 404 282"
-            stroke="rgba(255, 70, 40, 0.95)"
+            stroke="rgba(255, 255, 255, 0.4)"
             strokeWidth="12"
             strokeLinecap="round"
             fill="none"
@@ -231,7 +231,7 @@ export default function GlassOrb({
           />
           <path
             d="M 286 409 C 336 400, 382 352, 390 294"
-            stroke="#ff9845"
+            stroke="#ffffff"
             strokeWidth="3.5"
             strokeLinecap="round"
             fill="none"
@@ -239,10 +239,10 @@ export default function GlassOrb({
             opacity="0.85"
           />
 
-          {/* Top subtle soft blue-green ambient rim reflection */}
+          {/* Top subtle soft silver-white ambient rim reflection */}
           <path
             d="M 120 190 C 140 120, 240 85, 330 110"
-            stroke="rgba(0, 242, 254, 0.4)"
+            stroke="rgba(255, 255, 255, 0.3)"
             strokeWidth="8"
             strokeLinecap="round"
             fill="none"

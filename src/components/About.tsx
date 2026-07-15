@@ -1,16 +1,46 @@
-import { useState } from "react";
-import { motion } from "motion/react";
+import React, { useState, useRef } from "react";
+import { motion, useMotionValue, useSpring } from "motion/react";
 import { Award, Layers, ShieldCheck, Flame } from "lucide-react";
+import GlitchText from "./GlitchText";
+import TiltWrapper from "./TiltWrapper";
 
 export default function About() {
   const [imageError, setImageError] = useState(false);
+  const orbRef = useRef<HTMLDivElement>(null);
+
+  // Motion values for smooth magnetic pull on hover
+  const transX = useMotionValue(0);
+  const transY = useMotionValue(0);
+
+  const springTransX = useSpring(transX, { stiffness: 55, damping: 18 });
+  const springTransY = useSpring(transY, { stiffness: 55, damping: 18 });
+
+  const handleOrbMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!orbRef.current) return;
+    const rect = orbRef.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const dx = e.clientX - centerX;
+    const dy = e.clientY - centerY;
+    
+    // Smooth subtle magnetic pull (moving up to 20 pixels in the direction of the cursor)
+    const pullFactor = 0.22;
+    transX.set(dx * pullFactor);
+    transY.set(dy * pullFactor);
+  };
+
+  const handleOrbMouseLeave = () => {
+    transX.set(0);
+    transY.set(0);
+  };
+
   const stats = [
     {
       id: "projects",
       title: "Projects",
       value: "24+",
       sub: "Worlds Created",
-      color: "rgba(138, 63, 252, 0.4)",
+      color: "rgba(212, 212, 216, 0.45)",
       border: "border-cyber-neon/30",
       icon: <Layers className="w-5 h-5 text-cyber-neon" />,
     },
@@ -19,7 +49,7 @@ export default function About() {
       title: "Experience",
       value: "2+ Yrs",
       sub: "Software & Games",
-      color: "rgba(224, 75, 255, 0.4)",
+      color: "rgba(255, 255, 255, 0.5)",
       border: "border-cyber-magenta/30",
       icon: <Award className="w-5 h-5 text-cyber-magenta" />,
     },
@@ -86,7 +116,7 @@ export default function About() {
       whileInView="visible"
       viewport={{ once: true, margin: "-100px" }}
       variants={containerVariants}
-      className="relative min-h-screen py-24 px-4 flex flex-col justify-center z-10 max-w-5xl mx-auto"
+      className="relative min-h-screen py-24 px-4 flex flex-col justify-center z-10 max-w-5xl mx-auto font-rajdhani"
     >
       {/* Section Header */}
       <motion.div variants={itemVariants} className="mb-16">
@@ -97,66 +127,78 @@ export default function About() {
           </span>
         </div>
         <h2 className="heading-cyber text-3xl sm:text-4xl text-white font-black tracking-wider flex items-center gap-3">
-          ABOUT <span className="bg-gradient-to-r from-cyber-neon to-cyber-magenta bg-clip-text text-transparent">ME</span>
+          <GlitchText>ABOUT</GlitchText> <span className="bg-gradient-to-r from-cyber-neon to-cyber-magenta bg-clip-text text-transparent"><GlitchText delay={150}>ME</GlitchText></span>
         </h2>
       </motion.div>
 
       {/* Main Glass Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         {/* Left column: Bio card */}
-        <motion.div
-          variants={itemVariants}
-          className="lg:col-span-7 glass-panel p-8 sm:p-10 flex flex-col gap-6 relative overflow-hidden group"
-        >
-          {/* Subtle light sheen on hover */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent -translate-y-full group-hover:translate-y-full transition-transform duration-1000 pointer-events-none" />
+        <TiltWrapper className="lg:col-span-7 h-full">
+          <motion.div
+            variants={itemVariants}
+            className="glass-panel p-8 sm:p-10 flex flex-col gap-6 relative overflow-hidden group h-full"
+          >
+            {/* Subtle light sheen on hover */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent -translate-y-full group-hover:translate-y-full transition-transform duration-1000 pointer-events-none" />
 
-          {/* Subheader readout */}
-          <div className="flex items-center justify-between border-b border-[rgba(138,63,252,0.15)] pb-4">
-            <span className="font-mono text-xs text-gray-500">ID: SYSTEM_ARCHITECT // ROOT</span>
-            <span className="flex items-center gap-1.5 font-mono text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              ONLINE
-            </span>
-          </div>
+            {/* Subheader readout */}
+            <div className="flex items-center justify-between border-b border-[rgba(16,185,129,0.15)] pb-4">
+              <span className="font-mono text-xs text-gray-500">ID: SYSTEM_ARCHITECT // ROOT</span>
+              <span className="flex items-center gap-1.5 font-mono text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                ONLINE
+              </span>
+            </div>
 
-          <h3 className="font-orbitron font-bold text-xl text-white tracking-wide">
-            Software Engineer & Game Developer
-          </h3>
+            <h3 className="font-orbitron font-bold text-xl text-white tracking-wide">
+              Software Engineer & Game Developer
+            </h3>
 
-          <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
-            I am <strong className="text-white font-semibold">Adarsh</strong>, a 21-year-old developer from <strong className="text-white font-semibold">Dehradun, India</strong>, currently pursuing Computer Science at <strong className="text-white font-semibold">DIT University</strong>. I specialize in building software with <strong className="text-white font-semibold">C</strong> and <strong className="text-white font-semibold">Java</strong> while exploring the creative side of programming through game development. My work combines logical problem-solving with interactive design, focusing on clean code, performance, and user experience.
-          </p>
+            <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
+              I am <strong className="text-white font-semibold">Adarsh</strong>, a 21-year-old developer from <strong className="text-white font-semibold">Dehradun, India</strong>, currently pursuing Computer Science at <strong className="text-white font-semibold">DIT University</strong>. I specialize in building software with <strong className="text-white font-semibold">C</strong> and <strong className="text-white font-semibold">Java</strong> while exploring the creative side of programming through game development. My work combines logical problem-solving with interactive design, focusing on clean code, performance, and user experience.
+            </p>
 
-          <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
-            From implementing gameplay mechanics and object-oriented systems to developing scalable software applications, I enjoy turning ideas into polished digital experiences. Every project is an opportunity to learn, innovate, and refine my craft. As I continue expanding my knowledge of software engineering and game development, my goal is to create technology that is both functional and memorable.
-          </p>
+            <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
+              From implementing gameplay mechanics and object-oriented systems to developing scalable software applications, I enjoy turning ideas into polished digital experiences. Every project is an opportunity to learn, innovate, and refine my craft. As I continue expanding my knowledge of software engineering and game development, my goal is to create technology that is both functional and memorable.
+            </p>
 
-          <div className="grid grid-cols-2 gap-4 mt-2 pt-4 border-t border-[rgba(138,63,252,0.15)]">
-            <div className="flex items-start gap-2.5">
-              <ShieldCheck className="w-5 h-5 text-cyber-magenta shrink-0 mt-0.5" />
-              <div>
-                <h4 className="font-orbitron font-bold text-xs text-white uppercase tracking-wider">Low Latency</h4>
-                <p className="text-xs text-gray-400">Zero-allocation state systems</p>
+            <div className="grid grid-cols-2 gap-4 mt-2 pt-4 border-t border-[rgba(16,185,129,0.15)]">
+              <div className="flex items-start gap-2.5">
+                <ShieldCheck className="w-5 h-5 text-cyber-magenta shrink-0 mt-0.5" />
+                <div>
+                  <h4 className="font-orbitron font-bold text-xs text-white uppercase tracking-wider">Low Latency</h4>
+                  <p className="text-xs text-gray-400">Zero-allocation state systems</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-2.5">
+                <ShieldCheck className="w-5 h-5 text-cyber-neon shrink-0 mt-0.5" />
+                <div>
+                  <h4 className="font-orbitron font-bold text-xs text-white uppercase tracking-wider">Multi-Platform</h4>
+                  <p className="text-xs text-gray-400">Optimized PC, Console & Web</p>
+                </div>
               </div>
             </div>
-            <div className="flex items-start gap-2.5">
-              <ShieldCheck className="w-5 h-5 text-cyber-neon shrink-0 mt-0.5" />
-              <div>
-                <h4 className="font-orbitron font-bold text-xs text-white uppercase tracking-wider">Multi-Platform</h4>
-                <p className="text-xs text-gray-400">Optimized PC, Console & Web</p>
-              </div>
-            </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </TiltWrapper>
 
         {/* Right column: Liquid Glass Orb Profile Image Placeholder */}
         <motion.div
           variants={itemVariants}
           className="lg:col-span-5 flex justify-center items-center py-6"
         >
-          {/* Glass Orb container with physical layered shadows */}
-          <div className="relative w-64 h-64 sm:w-72 sm:h-72 rounded-full flex items-center justify-center">
+          {/* Glass Orb container with physical layered shadows & magnetic pull */}
+          <motion.div
+            ref={orbRef}
+            onMouseMove={handleOrbMouseMove}
+            onMouseLeave={handleOrbMouseLeave}
+            style={{
+              x: springTransX,
+              y: springTransY,
+              transformStyle: "preserve-3d",
+            }}
+            className="relative w-64 h-64 sm:w-72 sm:h-72 rounded-full flex items-center justify-center cursor-pointer pointer-events-auto"
+          >
             {/* Ambient Back Glow - Amplified for beautiful aura look */}
             <div className="absolute -inset-4 rounded-full bg-gradient-to-tr from-cyber-purple/50 via-cyber-neon/40 to-cyber-magenta/30 blur-[40px] opacity-80 animate-pulse-slow" />
             <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-cyber-neon/30 via-cyber-purple/20 to-white/10 blur-[20px] opacity-90" />
@@ -190,9 +232,9 @@ export default function About() {
               className="absolute -inset-6 rounded-full border border-dotted border-cyber-magenta/25 opacity-50 pointer-events-none"
             />
 
-            {/* Liquid Glass Orb */}
+             {/* Liquid Glass Orb */}
             <div
-              className="absolute inset-0 rounded-full border-2 border-white/40 bg-gradient-to-tr from-cyber-purple/40 via-white/5 to-white/20 backdrop-blur-3xl shadow-[0_20px_50px_rgba(0,0,0,0.85),_inset_0_4px_8px_rgba(255,255,255,0.55),_inset_0_-12px_40px_rgba(138,63,252,0.35),_0_0_30px_rgba(138,63,252,0.25)] overflow-hidden flex items-center justify-center group"
+              className="absolute inset-0 rounded-full border-2 border-white/40 bg-gradient-to-tr from-cyber-purple/40 via-white/5 to-white/20 backdrop-blur-3xl shadow-[0_20px_50px_rgba(0,0,0,0.85),_inset_0_4px_8px_rgba(255,255,255,0.55),_inset_0_-12px_40px_rgba(212,212,216,0.35),_0_0_30px_rgba(212,212,216,0.25)] overflow-hidden flex items-center justify-center group"
             >
               {/* Inner diagonal sweeping sheen */}
               <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/35 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out z-10 pointer-events-none" />
@@ -209,18 +251,18 @@ export default function About() {
               ) : (
                 <svg
                   viewBox="0 0 100 100"
-                  className="w-full h-full p-2 drop-shadow-[0_0_15px_rgba(138,63,252,0.45)] group-hover:scale-105 transition-transform duration-700 ease-out"
+                  className="w-full h-full p-2 drop-shadow-[0_0_15px_rgba(255,255,255,0.45)] group-hover:scale-105 transition-transform duration-700 ease-out"
                   fill="none"
                 >
                   {/* Cyber HUD elements and grid */}
-                  <circle cx="50" cy="50" r="45" stroke="rgba(138, 63, 252, 0.2)" strokeWidth="0.5" strokeDasharray="2 2" />
-                  <circle cx="50" cy="50" r="40" stroke="rgba(224, 75, 255, 0.15)" strokeWidth="0.5" />
+                  <circle cx="50" cy="50" r="45" stroke="rgba(212, 212, 216, 0.2)" strokeWidth="0.5" strokeDasharray="2 2" />
+                  <circle cx="50" cy="50" r="40" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="0.5" />
                   
                   {/* Ambient Backlight Glow */}
                   <circle cx="50" cy="45" r="28" fill="url(#avatar-glow)" opacity="0.35" />
 
                   {/* Cyber Track Lines */}
-                  <path d="M 15,50 L 30,50 L 35,45 M 85,50 L 70,50 L 65,55" stroke="rgba(224, 75, 255, 0.25)" strokeWidth="0.75" strokeDasharray="3 3" />
+                  <path d="M 15,50 L 30,50 L 35,45 M 85,50 L 70,50 L 65,55" stroke="rgba(255, 255, 255, 0.3)" strokeWidth="0.75" strokeDasharray="3 3" />
 
                   {/* Shoulder/Jacket Body */}
                   <path
@@ -230,9 +272,9 @@ export default function About() {
                     strokeWidth="1.5"
                   />
                   
-                  {/* Inner Shirt (Deep Purple/Magenta under jacket) */}
-                  <path d="M 43,62 L 50,72 L 57,62 C 54,64 46,64 43,62 Z" fill="#4a154b" opacity="0.8" />
-                  <path d="M 43,62 L 50,72 L 57,62" stroke="rgba(224, 75, 255, 0.4)" strokeWidth="0.75" />
+                  {/* Inner Shirt (Deep Emerald/Mint under jacket) */}
+                  <path d="M 43,62 L 50,72 L 57,62 C 54,64 46,64 43,62 Z" fill="#18181b" opacity="0.8" />
+                  <path d="M 43,62 L 50,72 L 57,62" stroke="rgba(255, 255, 255, 0.45)" strokeWidth="0.75" />
 
                   {/* Zipper details */}
                   <line x1="50" y1="72" x2="50" y2="85" stroke="#444" strokeWidth="1" />
@@ -264,8 +306,8 @@ export default function About() {
                   <path d="M 60,33 C 58,32 55,33 54,34" stroke="#1c110c" strokeWidth="1.5" strokeLinecap="round" />
 
                   {/* Glasses (Modern rectangular matching their frames) */}
-                  <rect x="38" y="33" width="10" height="8" rx="1.5" stroke="#111115" strokeWidth="1.5" fill="rgba(138, 63, 252, 0.15)" />
-                  <rect x="52" y="33" width="10" height="8" rx="1.5" stroke="#111115" strokeWidth="1.5" fill="rgba(138, 63, 252, 0.15)" />
+                  <rect x="38" y="33" width="10" height="8" rx="1.5" stroke="#111115" strokeWidth="1.5" fill="rgba(255, 255, 255, 0.15)" />
+                  <rect x="52" y="33" width="10" height="8" rx="1.5" stroke="#111115" strokeWidth="1.5" fill="rgba(255, 255, 255, 0.15)" />
                   <line x1="48" y1="36" x2="52" y2="36" stroke="#111115" strokeWidth="1.5" />
                   {/* Glass reflection sheen */}
                   <line x1="39" y1="39" x2="43" y2="35" stroke="rgba(255,255,255,0.4)" strokeWidth="0.75" />
@@ -299,17 +341,17 @@ export default function About() {
                   {/* Linear Gradients definitions */}
                   <defs>
                     <radialGradient id="avatar-glow" cx="50%" cy="50%" r="50%">
-                      <stop offset="0%" stopColor="#8A3FFC" />
-                      <stop offset="100%" stopColor="#E04BFF" stopOpacity="0" />
+                      <stop offset="0%" stopColor="#d4d4d8" />
+                      <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
                     </radialGradient>
                     <linearGradient id="jacket-glow" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#8A3FFC" stopOpacity="0.8" />
+                      <stop offset="0%" stopColor="#a1a1aa" stopOpacity="0.8" />
                       <stop offset="50%" stopColor="#121118" />
-                      <stop offset="100%" stopColor="#E04BFF" stopOpacity="0.8" />
+                      <stop offset="100%" stopColor="#ffffff" stopOpacity="0.8" />
                     </linearGradient>
                     <linearGradient id="ring-glow" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#E04BFF" />
-                      <stop offset="100%" stopColor="#8A3FFC" />
+                      <stop offset="0%" stopColor="#ffffff" />
+                      <stop offset="100%" stopColor="#cbd5e1" />
                     </linearGradient>
                   </defs>
                 </svg>
@@ -323,7 +365,7 @@ export default function About() {
               <div className="absolute top-2 left-6 right-6 h-12 rounded-full bg-gradient-to-b from-white/25 to-transparent filter blur-[1px] pointer-events-none z-10" />
               <div className="absolute bottom-2 left-10 right-10 h-6 rounded-full bg-gradient-to-t from-cyber-neon/15 to-transparent filter blur-[2px] pointer-events-none" />
             </div>
-          </div>
+          </motion.div>
         </motion.div>
       </div>
 
@@ -343,7 +385,7 @@ export default function About() {
             />
 
             <div className="flex items-center justify-between">
-              <span className="font-sans font-semibold text-[10px] text-gray-400 uppercase tracking-[0.2em]">
+              <span className="font-rajdhani font-semibold text-[10px] text-gray-400 uppercase tracking-[0.2em]">
                 {stat.title}
               </span>
               <div className="p-2 rounded-lg bg-white/5 border border-white/10 group-hover:border-cyber-neon/30 transition-colors">
@@ -352,10 +394,10 @@ export default function About() {
             </div>
 
             <div className="flex flex-col mt-2">
-              <span className="font-sans font-light text-4xl tracking-wide bg-gradient-to-br from-white via-white/95 to-white/35 bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(255,255,255,0.15)] group-hover:drop-shadow-[0_2px_15px_rgba(255,255,255,0.3)] transition-all duration-300">
+              <span className="font-rajdhani font-semibold text-4xl tracking-wide bg-gradient-to-br from-white via-white/95 to-white/35 bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(255,255,255,0.15)] group-hover:drop-shadow-[0_2px_15px_rgba(255,255,255,0.3)] transition-all duration-300">
                 {stat.value}
               </span>
-              <span className="text-xs text-gray-400 font-sans tracking-wide mt-1">
+              <span className="text-xs text-gray-400 font-rajdhani tracking-wide mt-1">
                 {stat.sub}
               </span>
             </div>

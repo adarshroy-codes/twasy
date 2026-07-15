@@ -1,21 +1,23 @@
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Syne:wght@700;800&family=JetBrains+Mono:wght@300;400;500;600&family=Mr+De+Haviland&family=Pinyon+Script&family=Playball&family=Alex+Brush&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Syne:wght@700;800&family=JetBrains+Mono:wght@300;400;500;600&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Share+Tech+Mono&family=Mr+De+Haviland&family=Pinyon+Script&family=Playball&family=Alex+Brush&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Sora", ui-sans-serif, system-ui, sans-serif;
   --font-orbitron: "Syne", sans-serif;
+  --font-rajdhani: "Rajdhani", sans-serif;
+  --font-share-tech: "Share Tech Mono", monospace;
   --font-glass-script: "Mr De Haviland", cursive;
   --font-pinyon: "Pinyon Script", cursive;
   --font-playball: "Playball", cursive;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
-  --color-cyber-black: #08060d;
-  --color-cyber-purple: #130721;
-  --color-cyber-neon: #8a3ffc;
-  --color-cyber-magenta: #e04bff;
-  --color-cyber-dark: #0c0512;
-  --color-cyber-glass: rgba(18, 8, 33, 0.55);
-  --color-cyber-glass-border: rgba(255, 255, 255, 0.16);
+  --color-cyber-black: #000000;
+  --color-cyber-purple: #0b0c10;
+  --color-cyber-neon: #d4d4d8;
+  --color-cyber-magenta: #ffffff;
+  --color-cyber-dark: #050507;
+  --color-cyber-glass: rgba(15, 15, 18, 0.55);
+  --color-cyber-glass-border: rgba(255, 255, 255, 0.2);
 }
 
 /* Custom Scrollbar */
@@ -25,66 +27,66 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #08060d;
+  background: #000000;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(138, 63, 252, 0.4);
+  background: rgba(212, 212, 216, 0.4);
   border-radius: 5px;
-  border: 2px solid #08060d;
+  border: 2px solid #000000;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(224, 75, 255, 0.6);
+  background: rgba(255, 255, 255, 0.65);
 }
 
 html {
   scroll-behavior: smooth;
-  background-color: #08060d;
+  background-color: #000000;
   color: #f3f2f5;
 }
 
 body {
   font-family: var(--font-sans);
   overflow-x: hidden;
-  background-color: #08060d;
+  background-color: #000000;
 }
 
 /* Thick luxury Frosted Glass panel style */
 .glass-panel {
-  background: rgba(18, 10, 36, 0.55);
+  background: rgba(15, 15, 18, 0.55);
   backdrop-filter: blur(40px) saturate(200%);
   -webkit-backdrop-filter: blur(40px) saturate(200%);
-  border: 1.5px solid rgba(255, 255, 255, 0.16);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
   box-shadow: 
     0 25px 50px -12px rgba(0, 0, 0, 0.75),
     inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.28),
-    inset 0 -1px 25px 0 rgba(138, 63, 252, 0.12);
+    inset 0 -1px 25px 0 rgba(255, 255, 255, 0.08);
   border-radius: 24px;
 }
 
 .glass-panel-hover:hover {
-  border-color: rgba(224, 75, 255, 0.55);
-  background: rgba(22, 12, 42, 0.65);
+  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(25, 25, 30, 0.65);
   box-shadow: 
-    0 30px 60px -10px rgba(138, 63, 252, 0.25),
+    0 30px 60px -10px rgba(255, 255, 255, 0.15),
     inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.38),
-    inset 0 -1px 30px 0 rgba(224, 75, 255, 0.15);
+    inset 0 -1px 30px 0 rgba(255, 255, 255, 0.1);
 }
 
 /* Glassmorphic border glow utility with high brightness */
 .border-glow-purple {
-  border-color: rgba(138, 63, 252, 0.5);
+  border-color: rgba(212, 212, 216, 0.5);
   box-shadow: 
-    0 0 25px rgba(138, 63, 252, 0.3),
+    0 0 25px rgba(212, 212, 216, 0.25),
     inset 0 1px 1px rgba(255,255,255,0.25);
 }
 
 .border-glow-magenta {
-  border-color: rgba(224, 75, 255, 0.5);
+  border-color: rgba(255, 255, 255, 0.6);
   box-shadow: 
-    0 0 25px rgba(224, 75, 255, 0.3),
-    inset 0 1px 1px rgba(255,255,255,0.25);
+    0 0 25px rgba(255, 255, 255, 0.3),
+    inset 0 1px 1px rgba(255,255,255,0.3);
 }
 
 /* Typography styles */
@@ -105,7 +107,7 @@ body {
   position: absolute;
   width: 45%;
   height: 45%;
-  background: radial-gradient(circle, rgba(138, 63, 252, 0.32) 0%, rgba(138, 63, 252, 0) 70%);
+  background: radial-gradient(circle, rgba(212, 212, 216, 0.22) 0%, rgba(212, 212, 216, 0) 70%);
   filter: blur(90px);
   pointer-events: none;
   z-index: 0;
@@ -116,7 +118,7 @@ body {
   position: absolute;
   width: 45%;
   height: 45%;
-  background: radial-gradient(circle, rgba(224, 75, 255, 0.25) 0%, rgba(224, 75, 255, 0) 70%);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 70%);
   filter: blur(90px);
   pointer-events: none;
   z-index: 0;
@@ -139,19 +141,19 @@ body {
 
 /* Soft Neon Glowing effects */
 .glow-purple {
-  filter: drop-shadow(0 0 12px rgba(138, 63, 252, 0.65));
+  filter: drop-shadow(0 0 12px rgba(228, 228, 231, 0.65));
 }
 
 .glow-magenta {
-  filter: drop-shadow(0 0 12px rgba(224, 75, 255, 0.65));
+  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.85));
 }
 
 .glow-text-purple {
-  text-shadow: 0 0 12px rgba(138, 63, 252, 0.55);
+  text-shadow: 0 0 12px rgba(228, 228, 231, 0.55);
 }
 
 .glow-text-magenta {
-  text-shadow: 0 0 12px rgba(224, 75, 255, 0.55);
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
 }
 
 /* Grid Perspective container */
@@ -171,20 +173,20 @@ body {
 .animate-slow-shimmer {
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0.85) 0%,
-    rgba(255, 255, 255, 0.9) 25%,
-    rgba(224, 75, 255, 0.95) 45%,
-    rgba(0, 242, 254, 1) 50%,
-    rgba(224, 75, 255, 0.95) 55%,
-    rgba(255, 255, 255, 0.9) 75%,
-    rgba(255, 255, 255, 0.85) 100%
+    rgba(255, 255, 255, 0.6) 0%,
+    rgba(255, 255, 255, 0.95) 25%,
+    rgba(180, 180, 180, 0.8) 45%,
+    rgba(255, 255, 255, 1) 50%,
+    rgba(180, 180, 180, 0.8) 55%,
+    rgba(255, 255, 255, 0.95) 75%,
+    rgba(255, 255, 255, 0.6) 100%
   );
   background-size: 200% auto;
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
   animation: slow-shimmer 8s linear infinite;
-  text-shadow: 0 0 20px rgba(224, 75, 255, 0.15);
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.08);
   display: inline-block;
 }
 
@@ -197,5 +199,51 @@ body {
     clip-path: circle(78px at 50% 50%);
   }
 }
+
+/* Faint, Animated Cyberpunk Scanline Overlays */
+@keyframes scanline-crawling {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+.scanlines-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  /* Faint, delicate repeating vertical CRT scanlines */
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0) 0px,
+    rgba(255, 255, 255, 0) 1px,
+    rgba(255, 255, 255, 0.02) 2px,
+    rgba(255, 255, 255, 0) 3px
+  );
+  pointer-events: none;
+  z-index: 9998;
+}
+
+.scanline-beam {
+  position: fixed;
+  left: 0;
+  width: 100%;
+  height: 15vh;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.015) 30%,
+    rgba(255, 255, 255, 0.03) 50%,
+    rgba(255, 255, 255, 0.015) 70%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  pointer-events: none;
+  z-index: 9999;
+  animation: scanline-crawling 12s linear infinite;
+}
+
 
 

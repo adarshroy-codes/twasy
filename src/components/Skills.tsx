@@ -1,6 +1,8 @@
 import React, { useState, useRef } from "react";
 import { motion, useSpring, useMotionValue } from "motion/react";
 import { Cpu, CheckCircle2, ShieldCheck } from "lucide-react";
+import GlitchText from "./GlitchText";
+import TiltWrapper from "./TiltWrapper";
 
 interface Skill {
   name: string;
@@ -94,18 +96,14 @@ function SkillCard({ skill }: { skill: Skill; key?: string }) {
       <div 
         className="absolute inset-0 rounded-2xl pointer-events-none filter blur-2xl opacity-0 group-hover:opacity-25 transition-opacity duration-500 -z-10"
         style={{
-          background: skill.color.includes("cyber-neon")
-            ? "radial-gradient(circle at center, rgba(0, 242, 254, 0.15) 0%, transparent 70%)"
-            : skill.color.includes("cyber-magenta")
-            ? "radial-gradient(circle at center, rgba(224, 75, 255, 0.15) 0%, transparent 70%)"
-            : "radial-gradient(circle at center, rgba(138, 63, 252, 0.15) 0%, transparent 70%)"
+          background: "radial-gradient(circle at center, rgba(255, 255, 255, 0.12) 0%, transparent 70%)"
         }}
       />
 
       {/* Title Details (Popped 3D forward) */}
       <div className="flex justify-between items-center relative z-10" style={{ transform: "translateZ(15px)" }}>
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-xl bg-white/5 border border-white/10 group-hover:border-cyber-neon/30 group-hover:bg-cyber-neon/5 transition-all duration-300">
+          <div className="p-2 rounded-xl bg-white/5 border border-white/10 group-hover:border-white/30 group-hover:bg-white/5 transition-all duration-300">
             {skill.icon}
           </div>
           <div className="flex flex-col">
@@ -122,7 +120,7 @@ function SkillCard({ skill }: { skill: Skill; key?: string }) {
           <span className="font-mono text-xs text-gray-400">
             {skill.level}
           </span>
-          <span className="font-orbitron text-xs font-black text-cyber-magenta">
+          <span className="font-orbitron text-xs font-black text-white">
             {skill.percent}%
           </span>
         </div>
@@ -154,7 +152,7 @@ export default function Skills() {
       category: "Engine",
       percent: 92,
       level: "Master",
-      color: "from-cyber-neon to-[#a855f7]",
+      color: "from-zinc-300 via-white to-zinc-500",
       icon: (
         <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
           {/* U Logo Shield */}
@@ -169,7 +167,7 @@ export default function Skills() {
       category: "Engine",
       percent: 95,
       level: "Expert",
-      color: "from-cyber-magenta to-[#ec4899]",
+      color: "from-zinc-400 via-white to-neutral-500",
       icon: (
         <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
           {/* Isometric coordinate axis box */}
@@ -184,7 +182,7 @@ export default function Skills() {
       category: "Engine",
       percent: 85,
       level: "Advanced",
-      color: "from-blue-500 to-[#0ea5e9]",
+      color: "from-slate-400 via-white to-slate-600",
       icon: (
         <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
           {/* Godot Mascot robot gear */}
@@ -201,7 +199,7 @@ export default function Skills() {
       category: "Tooling",
       percent: 80,
       level: "Advanced",
-      color: "from-amber-500 to-orange-500",
+      color: "from-neutral-300 via-zinc-200 to-neutral-500",
       icon: (
         <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
           {/* Blender orbital rings and hub */}
@@ -216,7 +214,7 @@ export default function Skills() {
       category: "Language",
       percent: 88,
       level: "Advanced",
-      color: "from-blue-500 to-indigo-500",
+      color: "from-zinc-400 via-white to-slate-400",
       icon: (
         <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
           <path d="M12 2L4 5V11C4 16.5 12 22 12 22C12 22 20 16.5 20 11V5L12 2Z" stroke="currentColor" />
@@ -229,7 +227,7 @@ export default function Skills() {
       category: "Language",
       percent: 82,
       level: "Advanced",
-      color: "from-[#ef4444] to-[#f97316]",
+      color: "from-slate-300 via-zinc-100 to-zinc-500",
       icon: (
         <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
           {/* Coffee cup */}
@@ -244,7 +242,7 @@ export default function Skills() {
       category: "Tooling",
       percent: 86,
       level: "Expert",
-      color: "from-purple-500 to-pink-500",
+      color: "from-neutral-400 via-white to-zinc-300",
       icon: (
         <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
           <path d="M23 7l-7 5 7 5V7z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
@@ -297,58 +295,60 @@ export default function Skills() {
           </span>
         </div>
         <h2 className="heading-cyber text-3xl sm:text-4xl text-white font-black tracking-wider">
-          CORE <span className="bg-gradient-to-r from-cyber-neon to-cyber-magenta bg-clip-text text-transparent">COMPETENCIES</span>
+          <GlitchText>CORE</GlitchText> <span className="bg-gradient-to-r from-cyber-neon to-cyber-magenta bg-clip-text text-transparent"><GlitchText delay={150}>COMPETENCIES</GlitchText></span>
         </h2>
       </motion.div>
 
       {/* Glass Container */}
-      <motion.div
-        variants={itemVariants}
-        className="w-full rounded-3xl glass-panel p-8 sm:p-12 relative overflow-hidden"
-      >
-        {/* Subtle decorative grid in bento container background */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:32px_32px] opacity-40 pointer-events-none" />
+      <TiltWrapper className="w-full" maxTilt={3}>
+        <motion.div
+          variants={itemVariants}
+          className="w-full rounded-3xl glass-panel p-8 sm:p-12 relative overflow-hidden h-full"
+        >
+          {/* Subtle decorative grid in bento container background */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:32px_32px] opacity-40 pointer-events-none" />
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 relative z-10">
-          {/* Left Column: Summary and architectural labels */}
-          <div className="md:col-span-4 flex flex-col justify-between gap-6">
-            <div className="flex flex-col gap-4">
-              <span className="font-mono text-xs text-cyber-magenta uppercase tracking-widest flex items-center gap-1">
-                <Cpu className="w-4 h-4" /> TECH_STACK_MATRIX
-              </span>
-              <h3 className="font-orbitron font-extrabold text-2xl text-white tracking-wide">
-                Engine & Language Core
-              </h3>
-              <p className="text-sm text-gray-400 leading-relaxed">
-                A professional developer portfolio is measured by real systems orchestration capability. My pipeline proficiency spans multi-threaded execution, spatial partitioning, C & Java memory models, and graphics buffers.
-              </p>
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-10 relative z-10">
+            {/* Left Column: Summary and architectural labels */}
+            <div className="md:col-span-4 flex flex-col justify-between gap-6">
+              <div className="flex flex-col gap-4">
+                <span className="font-mono text-xs text-cyber-magenta uppercase tracking-widest flex items-center gap-1">
+                  <Cpu className="w-4 h-4" /> TECH_STACK_MATRIX
+                </span>
+                <h3 className="font-orbitron font-extrabold text-2xl text-white tracking-wide">
+                  Engine & Language Core
+                </h3>
+                <p className="text-sm text-gray-400 leading-relaxed">
+                  A professional developer portfolio is measured by real systems orchestration capability. My pipeline proficiency spans multi-threaded execution, spatial partitioning, C & Java memory models, and graphics buffers.
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-2.5 border-t border-[rgba(255,255,255,0.08)] pt-6">
+                <div className="flex items-center gap-2 text-xs text-gray-300">
+                  <CheckCircle2 className="w-4 h-4 text-zinc-300" /> C & Java Memory & GC optimization
+                </div>
+                <div className="flex items-center gap-2 text-xs text-gray-300">
+                  <CheckCircle2 className="w-4 h-4 text-zinc-300" /> HLSL & GLSL Shader Authoring
+                </div>
+                <div className="flex items-center gap-2 text-xs text-gray-300">
+                  <CheckCircle2 className="w-4 h-4 text-zinc-300" /> Lock-free Job Queues
+                </div>
+              </div>
             </div>
 
-            <div className="flex flex-col gap-2.5 border-t border-[rgba(255,255,255,0.08)] pt-6">
-              <div className="flex items-center gap-2 text-xs text-gray-300">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" /> C & Java Memory & GC optimization
-              </div>
-              <div className="flex items-center gap-2 text-xs text-gray-300">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" /> HLSL & GLSL Shader Authoring
-              </div>
-              <div className="flex items-center gap-2 text-xs text-gray-300">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" /> Lock-free Job Queues
-              </div>
+            {/* Right Column: Interactive progress bar skills list */}
+            <div className="md:col-span-8 flex flex-col gap-4.5">
+              {skills.map((skill) => (
+                <SkillCard key={skill.name} skill={skill} />
+              ))}
             </div>
           </div>
 
-          {/* Right Column: Interactive progress bar skills list */}
-          <div className="md:col-span-8 flex flex-col gap-4.5">
-            {skills.map((skill) => (
-              <SkillCard key={skill.name} skill={skill} />
-            ))}
-          </div>
-        </div>
-
-        {/* Outer glowing frame accents */}
-        <div className="absolute top-0 right-0 w-32 h-[1px] bg-gradient-to-l from-cyber-magenta to-transparent" />
-        <div className="absolute bottom-0 left-0 w-32 h-[1px] bg-gradient-to-r from-cyber-neon to-transparent" />
-      </motion.div>
+          {/* Outer glowing frame accents */}
+          <div className="absolute top-0 right-0 w-32 h-[1px] bg-gradient-to-l from-cyber-magenta to-transparent" />
+          <div className="absolute bottom-0 left-0 w-32 h-[1px] bg-gradient-to-r from-cyber-neon to-transparent" />
+        </motion.div>
+      </TiltWrapper>
     </motion.section>
   );
 }
