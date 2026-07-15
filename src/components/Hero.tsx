@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "motion/react";
 import { ArrowDown } from "lucide-react";
 
@@ -74,43 +74,155 @@ export default function Hero({ onNavigate }: { onNavigate: (section: string) => 
     onNavigate(id);
   };
 
+  const svgRef = useRef<SVGSVGElement>(null);
+  const [mousePos, setMousePos] = useState({ x: 400, y: 400 });
+  const [isMouseIn, setIsMouseIn] = useState(false);
+  const animateRef = useRef<number | null>(null);
+
+  const currentPos = useRef({ x: 400, y: 400 });
+  const targetPos = useRef({ x: 400, y: 400 });
+
+  useEffect(() => {
+    const updatePhysics = () => {
+      const lerpFactor = 0.08; 
+      const dx = targetPos.current.x - currentPos.current.x;
+      const dy = targetPos.current.y - currentPos.current.y;
+      
+      if (Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1 && !isMouseIn) {
+        currentPos.current = { ...targetPos.current };
+        setMousePos({ ...targetPos.current });
+        animateRef.current = null;
+        return;
+      }
+
+      currentPos.current.x += dx * lerpFactor;
+      currentPos.current.y += dy * lerpFactor;
+      
+      setMousePos({ x: currentPos.current.x, y: currentPos.current.y });
+      animateRef.current = requestAnimationFrame(updatePhysics);
+    };
+
+    animateRef.current = requestAnimationFrame(updatePhysics);
+
+    return () => {
+      if (animateRef.current) {
+        cancelAnimationFrame(animateRef.current);
+        animateRef.current = null;
+      }
+    };
+  }, [isMouseIn]);
+
+  const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
+    if (!svgRef.current) return;
+    const rect = svgRef.current.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 800;
+    const y = ((e.clientY - rect.top) / rect.height) * 800;
+    targetPos.current = { x, y };
+    setIsMouseIn(true);
+  };
+
+  const handleMouseEnter = () => {
+    setIsMouseIn(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsMouseIn(false);
+    targetPos.current = { x: 400, y: 400 };
+  };
+
   // Generate the overlapping spiral triangles
   const numTriangles = 80;
   const size = 195;
   const rOffset = 158;
-  const triangles = Array.from({ length: numTriangles }, (_, i) => {
-    const theta = (i * 2 * Math.PI) / numTriangles;
-    // Offset centers of triangles to form a beautiful hollow torus
-    const cx = 400 + Math.cos(theta) * rOffset;
-    const cy = 400 + Math.sin(theta) * rOffset;
-    
-    // Rotate each triangle by its positional angle multiplied to create the spiraling spirograph twist
-    const phi = theta * 3.38;
 
-    // Calculate regular triangle coordinates relative to its center (cx, cy)
-    // Vertices at 0, 120, 240 degrees
-    const points = Array.from({ length: 3 }, (_, j) => {
-      const vertexAngle = phi + (j * 2 * Math.PI) / 3;
-      const vx = cx + size * Math.cos(vertexAngle);
-      const vy = cy + size * Math.sin(vertexAngle);
-      return `${vx.toFixed(2)},${vy.toFixed(2)}`;
-    }).join(" ");
+  const staticTriangles = useRef(
+    Array.from({ length: numTriangles }, (_, i) => {
+      const theta = (i * 2 * Math.PI) / numTriangles;
+      const cx = 400 + Math.cos(theta) * rOffset;
+      const cy = 400 + Math.sin(theta) * rOffset;
+      const phi = theta * 3.38;
+      
+      const vertices = Array.from({ length: 3 }, (_, j) => {
+        const vertexAngle = phi + (j * 2 * Math.PI) / 3;
+        const vxOffset = size * Math.cos(vertexAngle);
+        const vyOffset = size * Math.sin(vertexAngle);
+        return { vxOffset, vyOffset };
+      });
 
-    return { id: i, points, opacity: 0.15 + (i % 3) * 0.05 };
-  });
+      return {
+        id: i,
+        cx,
+        cy,
+        vertices,
+        opacity: 0.15 + (i % 3) * 0.05,
+      };
+    })
+  );
 
   // Concentric radar-like coordinate dot rings inside the central void
   const dotRings = [100, 120, 140];
-  const centralDots: { x: number; y: number; key: string }[] = [];
-  dotRings.forEach((r, ringIdx) => {
-    const numDots = ringIdx === 0 ? 12 : ringIdx === 1 ? 24 : 36;
-    for (let i = 0; i < numDots; i++) {
-      const angle = (i * 2 * Math.PI) / numDots;
-      const x = 400 + Math.cos(angle) * r;
-      const y = 400 + Math.sin(angle) * r;
-      centralDots.push({ x, y, key: `dot-${r}-${i}` });
-    }
+  const staticDots = useRef(
+    (() => {
+      const dots: { x: number; y: number; key: string }[] = [];
+      dotRings.forEach((r, ringIdx) => {
+        const numDots = ringIdx === 0 ? 12 : ringIdx === 1 ? 24 : 36;
+        for (let i = 0; i < numDots; i++) {
+          const angle = (i * 2 * Math.PI) / numDots;
+          const x = 400 + Math.cos(angle) * r;
+          const y = 400 + Math.sin(angle) * r;
+          dots.push({ x, y, key: `dot-${r}-${i}` });
+        }
+      });
+      return dots;
+    })()
+  );
+
+  // Distort vertices on-the-fly for fluid liquid-crystal movement
+  const distortedTriangles = staticTriangles.current.map((t) => {
+    const pointsStr = t.vertices
+      .map((v) => {
+        const origX = t.cx + v.vxOffset;
+        const origY = t.cy + v.vyOffset;
+        
+        const dx = origX - mousePos.x;
+        const dy = origY - mousePos.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        
+        let rx = origX;
+        let ry = origY;
+        
+        if (dist < 280 && dist > 0) {
+          const force = (1 - dist / 280) * 45;
+          // Repulsion
+          rx += (dx / dist) * force;
+          ry += (dy / dist) * force;
+          
+          // Swirl twist
+          const twistAngle = (1 - dist / 280) * 0.25; // elegant radian twist
+          const cosT = Math.cos(twistAngle);
+          const sinT = Math.sin(twistAngle);
+          
+          const rxRel = rx - mousePos.x;
+          const ryRel = ry - mousePos.y;
+          
+          rx = mousePos.x + (rxRel * cosT - ryRel * sinT);
+          ry = mousePos.y + (rxRel * sinT + ryRel * cosT);
+        }
+        
+        return `${rx.toFixed(2)},${ry.toFixed(2)}`;
+      })
+      .join(" ");
+
+    return {
+      id: t.id,
+      points: pointsStr,
+      opacity: t.opacity,
+    };
   });
+
+  const centerDist = Math.sqrt(
+    Math.pow(mousePos.x - 400, 2) + Math.pow(mousePos.y - 400, 2)
+  );
 
   return (
     <section
@@ -160,25 +272,80 @@ export default function Hero({ onNavigate }: { onNavigate: (section: string) => 
         
         {/* Full Interactive SVG Canvas */}
         <svg
+          ref={svgRef}
           viewBox="0 0 800 800"
-          className="w-full h-full text-white"
+          className="w-full h-full text-white animate-interactive-circle"
           xmlns="http://www.w3.org/2000/svg"
+          onMouseMove={handleMouseMove}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          style={{ cursor: "crosshair" }}
         >
           {/* Subtle Outer Radius Guides */}
           <circle cx="400" cy="400" r="380" stroke="rgba(255, 255, 255, 0.03)" strokeWidth="1" fill="none" strokeDasharray="4 8" />
           <circle cx="400" cy="400" r="320" stroke="rgba(255, 255, 255, 0.02)" strokeWidth="0.75" fill="none" />
           
-          {/* concentric radar dot coordinate lines inside central void */}
-          {centralDots.map((dot) => (
-            <circle key={dot.key} cx={dot.x} cy={dot.y} r="0.75" fill="white" opacity="0.18" />
-          ))}
+          {/* concentric radar dot coordinate lines inside central void with physics distortion */}
+          {staticDots.current.map((dot) => {
+            const dx = dot.x - mousePos.x;
+            const dy = dot.y - mousePos.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            let rx = dot.x;
+            let ry = dot.y;
+            
+            if (dist < 180 && dist > 0) {
+              const force = (1 - dist / 180) * 25;
+              rx += (dx / dist) * force;
+              ry += (dy / dist) * force;
+            }
+            
+            return (
+              <circle key={dot.key} cx={rx} cy={ry} r="0.75" fill="white" opacity="0.18" />
+            );
+          })}
 
           {/* Central Void Inner Guide Ring */}
           <circle cx="400" cy="400" r="105" stroke="rgba(255, 255, 255, 0.06)" strokeWidth="1" fill="none" />
 
+          {/* Dynamic interactive ripple rings */}
+          <circle
+            cx="400"
+            cy="400"
+            r={105 + Math.min(centerDist * 0.15, 80)}
+            stroke="rgba(255, 255, 255, 0.08)"
+            strokeWidth="0.75"
+            fill="none"
+            strokeDasharray="5 15"
+            style={{ transition: "r 0.1s ease-out" }}
+          />
+          <circle
+            cx="400"
+            cy="400"
+            r={Math.max(300 - centerDist * 0.25, 120)}
+            stroke="rgba(255, 255, 255, 0.03)"
+            strokeWidth="0.5"
+            fill="none"
+            strokeDasharray="20 40"
+            style={{ transition: "r 0.1s ease-out" }}
+          />
+
+          {/* Real-time cursor guide halo */}
+          {isMouseIn && (
+            <circle
+              cx={mousePos.x}
+              cy={mousePos.y}
+              r="30"
+              stroke="rgba(255, 255, 255, 0.15)"
+              strokeWidth="0.5"
+              fill="rgba(255, 255, 255, 0.02)"
+              strokeDasharray="2 4"
+              pointerEvents="none"
+            />
+          )}
+
           {/* Main Spirograph Mandala Spiral */}
           <g className="animate-mandala">
-            {triangles.map((t) => (
+            {distortedTriangles.map((t) => (
               <polygon
                 key={t.id}
                 points={t.points}
@@ -303,7 +470,7 @@ export default function Hero({ onNavigate }: { onNavigate: (section: string) => 
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-3.5 z-20 select-none">
         <span className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.6)]" />
         <span className="font-mono text-[9px] sm:text-[10px] tracking-[0.35em] text-white/40 uppercase whitespace-nowrap flex items-center gap-2">
-          <span>&gt; Peggy Gou - Han Jan</span>
+          <span>&gt; Adarsh Roy</span>
           {/* Real Animated Equalizer Wavebars */}
           <span className="flex items-end gap-[2px] h-2.5 w-4 pb-[1px]">
             <span className="w-[1.2px] bg-white/45 rounded-full" style={{ animation: "sound-bar-pulse 1.2s ease-in-out infinite" }} />
