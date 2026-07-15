@@ -182,7 +182,7 @@ export default function Projects() {
           </span>
         </div>
         <h2 className="heading-cyber text-3xl sm:text-4xl text-white font-black tracking-wider">
-          <GlitchText>FEATURED</GlitchText> <span className="bg-gradient-to-r from-cyber-magenta to-cyber-neon bg-clip-text text-transparent"><GlitchText delay={150}>PROJECTS</GlitchText></span>
+          <GlitchText hoverScramble={true}>FEATURED</GlitchText> <span className="bg-gradient-to-r from-cyber-magenta to-cyber-neon bg-clip-text text-transparent"><GlitchText delay={150} hoverScramble={true}>PROJECTS</GlitchText></span>
         </h2>
       </motion.div>
 

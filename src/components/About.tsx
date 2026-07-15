@@ -127,7 +127,7 @@ export default function About() {
           </span>
         </div>
         <h2 className="heading-cyber text-3xl sm:text-4xl text-white font-black tracking-wider flex items-center gap-3">
-          <GlitchText>ABOUT</GlitchText> <span className="bg-gradient-to-r from-cyber-neon to-cyber-magenta bg-clip-text text-transparent"><GlitchText delay={150}>ME</GlitchText></span>
+          <GlitchText hoverScramble={true}>ABOUT</GlitchText> <span className="bg-gradient-to-r from-cyber-neon to-cyber-magenta bg-clip-text text-transparent"><GlitchText delay={150} hoverScramble={true}>ME</GlitchText></span>
         </h2>
       </motion.div>
 

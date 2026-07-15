@@ -8,6 +8,7 @@ import Skills from "./components/Skills";
 import Contact from "./components/Contact";
 import LoadingScreen from "./components/LoadingScreen";
 import CustomCursor from "./components/CustomCursor";
+import AudioController from "./components/AudioController";
 import { AnimatePresence, motion } from "motion/react";
 import { Terminal, Shield, Sparkles } from "lucide-react";
 
@@ -102,6 +103,9 @@ export default function App() {
           >
             {/* 1. Custom Interactive Canvas Background */}
             <Background />
+
+            {/* 1.5 Cosmic Audio Controller Panel */}
+            <AudioController />
 
             {/* 2. Floating Refractive Glass Navbar */}
             <Navbar activeSection={activeSection} onNavigate={handleNavigate} />

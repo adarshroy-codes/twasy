@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import { Terminal, Volume2, VolumeX } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
-import { audioEngine } from "../lib/audioEngine";
+import React from "react";
+import { Terminal } from "lucide-react";
+import { motion } from "motion/react";
 
 interface NavbarProps {
   activeSection: string;
@@ -11,17 +10,6 @@ interface NavbarProps {
 export default function Navbar({ activeSection, onNavigate }: NavbarProps) {
   // Scrolled styling is active when not on the home section
   const scrolled = activeSection !== "home";
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  const toggleAudio = () => {
-    if (isPlaying) {
-      audioEngine.pause();
-      setIsPlaying(false);
-    } else {
-      audioEngine.play();
-      setIsPlaying(true);
-    }
-  };
 
   const handleScrollTo = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
@@ -76,41 +64,8 @@ export default function Navbar({ activeSection, onNavigate }: NavbarProps) {
             </motion.a>
           </div>
 
-          {/* Right Column: Interactive Console Trigger & Ambient Audio Toggle */}
+          {/* Right Column: Interactive Console Trigger */}
           <div className="flex justify-end items-center gap-2 sm:gap-3">
-            <button
-              onClick={toggleAudio}
-              className={`flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg border transition-all duration-300 focus:outline-none select-none cursor-pointer ${
-                isPlaying 
-                  ? "bg-white/10 border-white/30 text-white hover:bg-white/20 hover:border-white/50 shadow-[0_0_15px_rgba(255,255,255,0.2)]"
-                  : "bg-white/5 border-white/10 text-white/40 hover:text-white/80 hover:bg-white/10 hover:border-white/20"
-              }`}
-              title={isPlaying ? "Mute Ambient Hum" : "Play Ambient Space Hum"}
-              aria-label={isPlaying ? "Mute Ambient Hum" : "Play Ambient Space Hum"}
-            >
-              {isPlaying ? (
-                <div className="flex items-end justify-center gap-0.5 h-3 w-4">
-                  <motion.span 
-                    animate={{ height: ["20%", "100%", "20%"] }} 
-                    transition={{ repeat: Infinity, duration: 1.0, ease: "easeInOut" }} 
-                    className="w-0.5 bg-current rounded-full" 
-                  />
-                  <motion.span 
-                    animate={{ height: ["40%", "100%", "40%"] }} 
-                    transition={{ repeat: Infinity, duration: 0.7, ease: "easeInOut", delay: 0.15 }} 
-                    className="w-0.5 bg-current rounded-full" 
-                  />
-                  <motion.span 
-                    animate={{ height: ["30%", "80%", "30%"] }} 
-                    transition={{ repeat: Infinity, duration: 0.85, ease: "easeInOut", delay: 0.3 }} 
-                    className="w-0.5 bg-current rounded-full" 
-                  />
-                </div>
-              ) : (
-                <VolumeX className="w-4 h-4" />
-              )}
-            </button>
-
             <a
               href="#contact"
               onClick={(e) => handleScrollTo(e, "#contact")}
