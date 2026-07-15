@@ -138,10 +138,41 @@ export default function Projects() {
     },
   ];
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.05,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 80,
+        damping: 15,
+      },
+    },
+  };
+
   return (
-    <section id="projects" className="relative min-h-screen py-24 px-4 z-10 max-w-5xl mx-auto">
+    <motion.section
+      id="projects"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-100px" }}
+      variants={containerVariants}
+      className="relative min-h-screen py-24 px-4 z-10 max-w-5xl mx-auto"
+    >
       {/* Section Header */}
-      <div className="mb-16">
+      <motion.div variants={itemVariants} className="mb-16">
         <div className="flex items-center gap-2 mb-2">
           <div className="w-8 h-[1px] bg-cyber-magenta" />
           <span className="font-mono text-xs text-cyber-magenta uppercase tracking-widest">
@@ -151,17 +182,14 @@ export default function Projects() {
         <h2 className="heading-cyber text-3xl sm:text-4xl text-white font-black tracking-wider">
           FEATURED <span className="bg-gradient-to-r from-cyber-magenta to-cyber-neon bg-clip-text text-transparent">PROJECTS</span>
         </h2>
-      </div>
+      </motion.div>
 
       {/* Grid of 3 Premium Cards */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {projects.map((project, index) => (
+        {projects.map((project) => (
           <motion.div
             key={project.id}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.7, delay: index * 0.2 }}
+            variants={itemVariants}
             className="group relative rounded-2xl glass-panel border border-white/10 overflow-hidden flex flex-col justify-between hover:border-cyber-magenta/40 hover:shadow-[0_15px_45px_rgba(138,63,252,0.15)] transition-all duration-500 hover:-translate-y-2 h-[560px]"
           >
             {/* The Game Artwork SVG Container */}
@@ -245,6 +273,6 @@ export default function Projects() {
           </motion.div>
         ))}
       </div>
-    </section>
+    </motion.section>
   );
 }

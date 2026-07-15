@@ -55,10 +55,41 @@ export default function About() {
     },
   ];
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.05,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 80,
+        damping: 15,
+      },
+    },
+  };
+
   return (
-    <section id="about" className="relative min-h-screen py-24 px-4 flex flex-col justify-center z-10 max-w-5xl mx-auto">
+    <motion.section
+      id="about"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-100px" }}
+      variants={containerVariants}
+      className="relative min-h-screen py-24 px-4 flex flex-col justify-center z-10 max-w-5xl mx-auto"
+    >
       {/* Section Header */}
-      <div className="mb-16">
+      <motion.div variants={itemVariants} className="mb-16">
         <div className="flex items-center gap-2 mb-2">
           <div className="w-8 h-[1px] bg-cyber-neon" />
           <span className="font-mono text-xs text-cyber-neon uppercase tracking-widest">
@@ -68,16 +99,13 @@ export default function About() {
         <h2 className="heading-cyber text-3xl sm:text-4xl text-white font-black tracking-wider flex items-center gap-3">
           ABOUT <span className="bg-gradient-to-r from-cyber-neon to-cyber-magenta bg-clip-text text-transparent">ME</span>
         </h2>
-      </div>
+      </motion.div>
 
       {/* Main Glass Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         {/* Left column: Bio card */}
         <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8 }}
+          variants={itemVariants}
           className="lg:col-span-7 glass-panel p-8 sm:p-10 flex flex-col gap-6 relative overflow-hidden group"
         >
           {/* Subtle light sheen on hover */}
@@ -124,10 +152,7 @@ export default function About() {
 
         {/* Right column: Liquid Glass Orb Profile Image Placeholder */}
         <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8 }}
+          variants={itemVariants}
           className="lg:col-span-5 flex justify-center items-center py-6"
         >
           {/* Glass Orb container with physical layered shadows */}
@@ -304,13 +329,10 @@ export default function About() {
 
       {/* Three Glowing Statistic Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-12 w-full">
-        {stats.map((stat, i) => (
+        {stats.map((stat) => (
           <motion.div
             key={stat.id}
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.6, delay: i * 0.15 }}
+            variants={itemVariants}
             whileHover={{ y: -6 }}
             className={`glass-panel glass-panel-hover p-6 flex flex-col gap-3 relative overflow-hidden group border-b-2 border-b-transparent hover:border-b-cyber-magenta/40`}
           >
@@ -340,6 +362,6 @@ export default function About() {
           </motion.div>
         ))}
       </div>
-    </section>
+    </motion.section>
   );
 }

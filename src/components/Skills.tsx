@@ -23,6 +23,19 @@ function SkillCard({ skill }: { skill: Skill; key?: string }) {
   // Soft scales and glowing shadows on hover
   const scale = useSpring(1.0, { stiffness: 100, damping: 15 });
 
+  const cardVariants = {
+    hidden: { opacity: 0, y: 25 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 80,
+        damping: 15,
+      },
+    },
+  };
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
@@ -59,6 +72,7 @@ function SkillCard({ skill }: { skill: Skill; key?: string }) {
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      variants={cardVariants}
       style={{
         rotateX,
         rotateY,
@@ -241,10 +255,41 @@ export default function Skills() {
     },
   ];
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.05,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 80,
+        damping: 15,
+      },
+    },
+  };
+
   return (
-    <section id="skills" className="relative min-h-screen py-24 px-4 z-10 max-w-5xl mx-auto flex flex-col justify-center">
+    <motion.section
+      id="skills"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-100px" }}
+      variants={containerVariants}
+      className="relative min-h-screen py-24 px-4 z-10 max-w-5xl mx-auto flex flex-col justify-center"
+    >
       {/* Section Header */}
-      <div className="mb-16">
+      <motion.div variants={itemVariants} className="mb-16">
         <div className="flex items-center gap-2 mb-2">
           <div className="w-8 h-[1px] bg-cyber-neon" />
           <span className="font-mono text-xs text-cyber-neon uppercase tracking-widest">
@@ -254,14 +299,11 @@ export default function Skills() {
         <h2 className="heading-cyber text-3xl sm:text-4xl text-white font-black tracking-wider">
           CORE <span className="bg-gradient-to-r from-cyber-neon to-cyber-magenta bg-clip-text text-transparent">COMPETENCIES</span>
         </h2>
-      </div>
+      </motion.div>
 
       {/* Glass Container */}
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.8 }}
+        variants={itemVariants}
         className="w-full rounded-3xl glass-panel p-8 sm:p-12 relative overflow-hidden"
       >
         {/* Subtle decorative grid in bento container background */}
@@ -307,6 +349,6 @@ export default function Skills() {
         <div className="absolute top-0 right-0 w-32 h-[1px] bg-gradient-to-l from-cyber-magenta to-transparent" />
         <div className="absolute bottom-0 left-0 w-32 h-[1px] bg-gradient-to-r from-cyber-neon to-transparent" />
       </motion.div>
-    </section>
+    </motion.section>
   );
 }

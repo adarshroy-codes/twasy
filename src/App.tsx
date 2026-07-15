@@ -7,7 +7,7 @@ import Projects from "./components/Projects";
 import Skills from "./components/Skills";
 import Contact from "./components/Contact";
 import LoadingScreen from "./components/LoadingScreen";
-import CustomCursor from "./components/CustomCursor";
+import ScrollIndicator from "./components/ScrollIndicator";
 import { AnimatePresence, motion } from "motion/react";
 import { Terminal, Shield, Sparkles } from "lucide-react";
 
@@ -63,8 +63,8 @@ export default function App() {
             {/* 1. Custom Interactive Canvas Background */}
             <Background />
 
-            {/* Custom Magnetic Cursor */}
-            <CustomCursor />
+            {/* Custom Scroll Progress Indicator */}
+            <ScrollIndicator />
 
             {/* 3. Floating Refractive Glass Navbar */}
             <Navbar activeSection={activeSection} />

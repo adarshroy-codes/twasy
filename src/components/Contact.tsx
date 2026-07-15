@@ -78,10 +78,41 @@ export default function Contact() {
     },
   ];
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.12,
+        delayChildren: 0.05,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 80,
+        damping: 15,
+      },
+    },
+  };
+
   return (
-    <section id="contact" className="relative min-h-screen py-24 px-4 z-10 max-w-5xl mx-auto flex flex-col justify-center">
+    <motion.section
+      id="contact"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-100px" }}
+      variants={containerVariants}
+      className="relative min-h-screen py-24 px-4 z-10 max-w-5xl mx-auto flex flex-col justify-center"
+    >
       {/* Section Header */}
-      <div className="mb-16">
+      <motion.div variants={itemVariants} className="mb-16">
         <div className="flex items-center gap-2 mb-2">
           <div className="w-8 h-[1px] bg-cyber-magenta" />
           <span className="font-mono text-xs text-cyber-magenta uppercase tracking-widest">
@@ -91,17 +122,14 @@ export default function Contact() {
         <h2 className="heading-cyber text-3xl sm:text-4xl text-white font-black tracking-wider">
           SECURE <span className="bg-gradient-to-r from-cyber-magenta to-cyber-neon bg-clip-text text-transparent">UPLINK</span>
         </h2>
-      </div>
+      </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
         {/* Left Column: Floating Glass Envelope Illustration & Contact Cards */}
         <div className="lg:col-span-5 flex flex-col gap-6 justify-between">
           {/* Custom Floating Glass Envelope Graphic Panel */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+            variants={itemVariants}
             className="rounded-2xl glass-panel p-6 flex flex-col items-center justify-center relative overflow-hidden h-60 sm:h-72"
           >
             {/* Background vector starburst glow */}
@@ -177,11 +205,12 @@ export default function Contact() {
           {/* Contact Cards Stack */}
           <div className="flex flex-col gap-4">
             {contactCards.map((card) => (
-              <a
+              <motion.a
                 key={card.label}
                 href={card.href}
                 target={card.href.startsWith("http") ? "_blank" : undefined}
                 rel="noreferrer"
+                variants={itemVariants}
                 className="glass-panel glass-panel-hover p-4 flex items-center gap-4 transition-all duration-300 relative group overflow-hidden"
               >
                 <div className="p-3 rounded-xl bg-white/5 border border-white/10 group-hover:border-cyber-magenta/40 transition-colors">
@@ -198,17 +227,14 @@ export default function Contact() {
                     {card.sub}
                   </span>
                 </div>
-              </a>
+              </motion.a>
             ))}
           </div>
         </div>
 
         {/* Right Column: Large Liquid Glass Contact Panel */}
         <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          variants={itemVariants}
           className="lg:col-span-7 rounded-2xl glass-panel p-8 flex flex-col justify-between relative overflow-hidden"
         >
           {/* Subtle tech background line decoration */}
@@ -341,6 +367,6 @@ export default function Contact() {
           )}
         </motion.div>
       </div>
-    </section>
+    </motion.section>
   );
 }
