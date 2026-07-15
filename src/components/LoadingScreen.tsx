@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
+import { Sparkles, Terminal } from "lucide-react";
 
 interface LoadingScreenProps {
   onComplete: () => void;
@@ -8,208 +9,138 @@ interface LoadingScreenProps {
 
 export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
   const [progress, setProgress] = useState(0);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // Smooth, high-precision loading progress
+  // High-performance smooth animation loop (60 FPS feel, finishes in ~900ms)
   useEffect(() => {
-    let currentProgress = 0;
-    const interval = setInterval(() => {
-      // Artistic speed curve: starts fast, slows down at the end to build anticipation, then launches
-      const remaining = 100 - currentProgress;
-      const increment = Math.max(0.18, Math.min(3.8, remaining * (Math.random() * 0.08 + 0.01)));
-      currentProgress += increment;
-      
-      if (currentProgress >= 100) {
+    let startTimestamp: number | null = null;
+    const duration = 950; // Fast loading duration (950ms)
+
+    const animateProgress = (timestamp: number) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const elapsed = timestamp - startTimestamp;
+      const currentProgress = Math.min((elapsed / duration) * 100, 100);
+
+      // Smooth cubic-bezier-like easing curve for progression feel
+      const t = currentProgress / 100;
+      const easedProgress = 100 * (t * t * (3 - 2 * t)); 
+
+      setProgress(Math.min(easedProgress, 100));
+
+      if (elapsed < duration) {
+        requestAnimationFrame(animateProgress);
+      } else {
         setProgress(100);
-        clearInterval(interval);
         setTimeout(() => {
           onComplete();
-        }, 800); // Elegant hold for visual transition
-      } else {
-        setProgress(currentProgress);
+        }, 180); // Very fast, snappy, buttery hand-off to the main page
       }
-    }, 45);
+    };
 
-    return () => clearInterval(interval);
+    const animFrameId = requestAnimationFrame(animateProgress);
+    return () => cancelAnimationFrame(animFrameId);
   }, [onComplete]);
 
-  // Subtle background starfield & grid of cosmic coordinates
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let width = (canvas.width = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
-
-    const handleResize = () => {
-      if (!canvas) return;
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    };
-    window.addEventListener("resize", handleResize);
-
-    // Fine, sparse stars
-    const starCount = 55;
-    const stars = Array.from({ length: starCount }, () => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      size: Math.random() * 1.1 + 0.3,
-      opacity: Math.random() * 0.45 + 0.1,
-      speed: Math.random() * 0.04 + 0.015,
-    }));
-
-    let animId: number;
-    const render = () => {
-      ctx.fillStyle = "#030206"; // Deep, infinite dark canvas
-      ctx.fillRect(0, 0, width, height);
-
-      // 1. Draw ultra-faint coordinate gridlines (fine art architectural feel)
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.012)";
-      ctx.lineWidth = 0.5;
-      const gridSize = 140;
-      for (let x = 0; x < width; x += gridSize) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, height);
-        ctx.stroke();
-      }
-      for (let y = 0; y < height; y += gridSize) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(width, y);
-        ctx.stroke();
-      }
-
-      // 2. Render and slowly drift sparse stars
-      stars.forEach((star) => {
-        star.y -= star.speed;
-        if (star.y < 0) {
-          star.y = height;
-          star.x = Math.random() * width;
-        }
-
-        ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      animId = requestAnimationFrame(render);
-    };
-
-    render();
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      cancelAnimationFrame(animId);
-    };
-  }, []);
-
   return (
-    <div className="fixed inset-0 z-[1000] overflow-hidden bg-[#030206] flex flex-col items-center justify-between py-16 px-8 select-none">
-      {/* Background Deep Canvas */}
-      <canvas ref={canvasRef} className="absolute inset-0 z-0 pointer-events-none" />
+    <motion.div
+      initial={{ opacity: 1 }}
+      exit={{ 
+        opacity: 0, 
+        scale: 1.02,
+        filter: "blur(15px)",
+        transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1] } 
+      }}
+      className="fixed inset-0 z-[1000] overflow-hidden bg-[#030108] flex flex-col items-center justify-center p-6 select-none"
+    >
+      {/* Background soft ambient glowing orbs */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-cyber-purple/10 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-cyber-magenta/5 blur-[120px] pointer-events-none" />
 
-      {/* TOP SYSTEM METRICS - Minimalistic text line */}
-      <div className="w-full max-w-6xl flex justify-between items-center z-10 font-mono text-[9px] text-gray-500 uppercase tracking-[0.4em] pointer-events-none">
-        <div className="flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-cyber-neon/80" />
-          <span>PORTFOLIO_SYSTEM_ONLINE</span>
-        </div>
-        <div>
-          <span>SECTOR_0x7F2B</span>
-        </div>
-      </div>
-
-      {/* CENTER INTERACTIVE HUD: Artistic, minimal, hyper-focused */}
-      <div className="relative flex flex-col items-center justify-center my-auto z-10 w-full max-w-md">
-        
-        {/* Artistic Compass / Celestial Gyroscope Graphic */}
-        <div className="relative w-44 h-44 mb-10 flex items-center justify-center">
-          
-          {/* Subtle Outer Rotating Celestial Ring */}
+      {/* Main glassmorphic container */}
+      <motion.div
+        initial={{ opacity: 0, y: 15, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="relative w-full max-w-sm rounded-2xl bg-white/[0.02] border border-white/5 p-8 backdrop-blur-xl shadow-[0_30px_100px_rgba(0,0,0,0.8),inset_0_1px_0_0_rgba(255,255,255,0.05)] overflow-hidden"
+      >
+        {/* Diagonal high-end glass glare effect (Liquid Glass sweep) */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
-            className="absolute inset-0 rounded-full border border-white/[0.04] flex items-center justify-center"
-          >
-            {/* Fine tick marks on the outer ring */}
-            <div className="absolute top-0 w-0.5 h-2 bg-white/20" />
-            <div className="absolute bottom-0 w-0.5 h-2 bg-white/20" />
-            <div className="absolute left-0 w-2 h-0.5 bg-white/20" />
-            <div className="absolute right-0 w-2 h-0.5 bg-white/20" />
-          </motion.div>
-
-          {/* Innermost fast, delicate ring */}
-          <motion.div
-            animate={{ rotate: -360 }}
-            transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
-            className="absolute inset-4 rounded-full border border-dashed border-cyber-neon/15 flex items-center justify-center"
-          />
-
-          {/* Smooth, pulsating glass-like core singularity */}
-          <motion.div
-            animate={{
-              scale: [0.96, 1.04, 0.96],
-              opacity: [0.6, 0.95, 0.6],
-            }}
+            animate={{ x: ["-100%", "200%"], y: ["-100%", "200%"] }}
             transition={{
-              duration: 3,
+              duration: 2.2,
               repeat: Infinity,
               ease: "easeInOut",
+              repeatDelay: 0.5
             }}
-            className="w-10 h-10 rounded-full bg-gradient-to-tr from-cyber-purple/40 to-cyber-neon/50 blur-[2px] shadow-[0_0_20px_rgba(0,242,254,0.35)] flex items-center justify-center"
-          >
-            {/* Tiny sharp white point inside the singularity */}
-            <div className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_#fff]" />
-          </motion.div>
-
-          {/* Sharp diagonal hair-crosshairs representing space telescope calibration */}
-          <div className="absolute inset-6 pointer-events-none">
-            <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[0.5px] bg-white/5" />
-            <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[0.5px] bg-white/5" />
-          </div>
+            className="absolute w-[200%] h-[200%] bg-gradient-to-tr from-transparent via-white/[0.04] to-transparent rotate-12"
+          />
         </div>
 
-        {/* LOADING PROGRESS PERCENTAGE TEXT - Elegant spacing */}
-        <div className="flex flex-col items-center gap-2">
-          <motion.div 
-            initial={{ opacity: 0, y: 5 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="font-mono text-[10px] tracking-[0.5em] text-gray-400 uppercase"
-          >
-            INITIALIZING CORE
-          </motion.div>
-          <div className="font-mono text-3xl font-light text-white tracking-[0.2em] flex items-center justify-center pl-[0.2em]">
-            <span>{String(Math.min(Math.floor(progress), 100)).padStart(3, "0")}</span>
-            <span className="text-cyber-neon text-lg ml-1 font-normal">%</span>
-          </div>
-        </div>
+        {/* Top glossy edge accent line */}
+        <div className="absolute top-0 inset-x-0 h-[1.5px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
-        {/* LOADING PROGRESS BAR: Ultra-sleek, razor thin 1px bar */}
-        <div className="w-48 mt-6">
-          <div className="relative h-[1px] w-full bg-white/[0.08] overflow-hidden">
-            {/* Glowing progress filling gradient bar */}
+        <div className="flex flex-col items-center">
+          {/* Glowing loader orb core with spinning orbits */}
+          <div className="relative w-24 h-24 mb-8 flex items-center justify-center">
+            
+            {/* Spinning clean gradient ring */}
             <motion.div
-              className="absolute left-0 top-0 h-full bg-gradient-to-r from-cyber-neon via-cyber-magenta to-white shadow-[0_0_8px_rgba(0,242,254,0.8)]"
-              style={{ width: `${progress}%` }}
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+              className="absolute inset-0 rounded-full border border-dashed border-white/10"
             />
+
+            {/* Glowing cyan/magenta active speed ring */}
+            <motion.div
+              animate={{ rotate: -360 }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
+              className="absolute inset-1.5 rounded-full border-2 border-transparent border-t-cyber-neon/40 border-r-cyber-magenta/40"
+            />
+
+            {/* Pulsating refractive singularity glass ball */}
+            <motion.div
+              animate={{ scale: [0.95, 1.05, 0.95] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              className="w-12 h-12 rounded-full bg-gradient-to-tr from-cyber-magenta/20 to-cyber-neon/30 p-[1px] flex items-center justify-center shadow-[0_0_30px_rgba(0,242,254,0.15)]"
+            >
+              <div className="w-full h-full rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center">
+                <Sparkles className="w-4 h-4 text-white/90 animate-pulse" />
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Clean minimal indicator text */}
+          <div className="space-y-1 text-center w-full">
+            <div className="font-sans font-semibold text-[10px] tracking-[0.25em] text-gray-400 uppercase">
+              Initializing Experience
+            </div>
+            
+            {/* Smooth numeric ticker */}
+            <div className="font-mono text-3xl font-light text-white tracking-[0.1em] flex items-center justify-center pl-[0.1em]">
+              <span className="font-sans font-extralight bg-gradient-to-br from-white to-white/60 bg-clip-text text-transparent">
+                {String(Math.min(Math.floor(progress), 100)).padStart(3, "0")}
+              </span>
+              <span className="text-cyber-neon text-sm ml-0.5 font-normal">%</span>
+            </div>
+          </div>
+
+          {/* Sleek razor-thin loading progress track */}
+          <div className="w-full mt-7">
+            <div className="relative h-[1.5px] w-full bg-white/[0.05] rounded-full overflow-hidden">
+              <div
+                className="absolute left-0 top-0 h-full bg-gradient-to-r from-cyber-neon via-cyber-magenta to-white transition-all duration-[16ms] ease-out shadow-[0_0_10px_rgba(0,242,254,0.6)]"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+          </div>
+
+          {/* Dynamic boot logging text */}
+          <div className="mt-5 flex items-center gap-1.5 text-gray-500 font-mono text-[8px] uppercase tracking-wider">
+            <Terminal className="w-3 h-3 text-cyber-magenta/80" />
+            <span>SYS_READY_0x7F // PORT:3000</span>
           </div>
         </div>
-      </div>
-
-      {/* BOTTOM COORDINATE FEED - Sharp & static cosmic info */}
-      <div className="w-full max-w-6xl flex justify-between items-center z-10 font-mono text-[9px] text-gray-500 uppercase tracking-[0.3em] pointer-events-none">
-        <div>
-          <span>REFRACTIVE_CORE: ACTIVE</span>
-        </div>
-        <div className="text-right">
-          <span>COORDINATES // 45.109 - 99.852</span>
-        </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

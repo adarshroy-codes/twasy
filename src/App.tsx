@@ -12,7 +12,7 @@ import { Terminal, Shield, Sparkles } from "lucide-react";
 
 export default function App() {
   const [activeSection, setActiveSection] = useState("home");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Track the active scroll section using high-precision IntersectionObserver
   useEffect(() => {

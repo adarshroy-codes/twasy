@@ -57,10 +57,10 @@ export default function Contact() {
     },
     {
       label: "Instagram Feed",
-      value: "@rizx_.twasy",
+      value: "@aadaarsshhhh",
       sub: "Creative updates & process",
       icon: <Instagram className="w-5 h-5 text-cyber-magenta" />,
-      href: "https://instagram.com/rizx_.twasy",
+      href: "https://instagram.com/aadaarsshhhh",
     },
     {
       label: "Discord Comms",

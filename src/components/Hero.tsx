@@ -387,12 +387,14 @@ export default function Hero() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-base sm:text-lg text-gray-200 max-w-lg mb-10 tracking-wide flex items-center justify-center gap-2"
+          className="text-base sm:text-lg text-gray-300 max-w-lg mb-10 tracking-wide flex items-center justify-center gap-2.5"
         >
-          <Code2 className="w-5 h-5 text-cyber-magenta shrink-0" />
+          <Code2 className="w-4 h-4 text-cyber-magenta shrink-0" />
           <span>
-            Crafting immersive gaming experiences with{" "}
-            <span className="text-white font-medium">pixels & code</span>
+            coding the mechanics and capturing the{" "}
+            <span className="text-white font-semibold">
+              narratives.
+            </span>
           </span>
         </motion.p>
 

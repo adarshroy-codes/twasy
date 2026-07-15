@@ -227,6 +227,21 @@ export default function Projects() {
 
             {/* Top glass reflection highlight */}
             <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
+
+            {/* Diagonal 'light sweep' reflection effect (Liquid Glass) */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none z-20">
+              <motion.div
+                initial={{ x: "-150%", y: "-150%" }}
+                animate={{ x: "150%", y: "150%" }}
+                transition={{
+                  duration: 3.8,
+                  repeat: Infinity,
+                  ease: [0.43, 0.13, 0.23, 0.96],
+                  repeatDelay: 4,
+                }}
+                className="absolute w-[250%] h-[250%] bg-gradient-to-tr from-transparent via-white/[0.09] to-transparent rotate-12"
+              />
+            </div>
           </motion.div>
         ))}
       </div>
